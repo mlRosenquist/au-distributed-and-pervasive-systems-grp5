@@ -1,0 +1,46 @@
+<mxfile host="65bd71144e">
+    <diagram id="vmWsI6P5mTRuVI_rVKc1" name="Page-1">
+        <mxGraphModel dx="1203" dy="766" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="NodeDatabase" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="260" y="80" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="NodeAPI" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="80" width="140" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="110" y="210" width="120" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="100" y="200" width="120" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Nodes" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="90" y="200" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="endArrow=classic;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="3" target="2">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="210" y="360" as="sourcePoint"/>
+                        <mxPoint x="260" y="310" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="8" value="" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="3" target="5">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="230" y="130" as="sourcePoint"/>
+                        <mxPoint x="270" y="130" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="9" value="NodeAPI&lt;br&gt;&lt;br&gt;- [GET]&amp;lt;url&amp;gt;/Node/&amp;lt;id&amp;gt;&lt;br&gt;- [POST]&amp;lt;url&amp;gt;/Node/&amp;lt;id&amp;gt;&lt;br&gt;- [PATCH]&amp;lt;url&amp;gt;/Node/&amp;lt;id&amp;gt;&lt;br&gt;&lt;br&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="450" width="160" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="NodeDatabase&lt;br&gt;[NoSQL]&lt;br&gt;&lt;br&gt;- NodeCollection" style="rounded=1;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+                    <mxGeometry x="320" y="450" width="160" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="NodeAPI&lt;br&gt;&lt;br&gt;- [GET]&amp;lt;url&amp;gt;/Node/&amp;lt;id&amp;gt;&lt;br&gt;- [POST]&amp;lt;url&amp;gt;/Node/&amp;lt;id&amp;gt;&lt;br&gt;- [PATCH]&amp;lt;url&amp;gt;/Node/&amp;lt;id&amp;gt;&lt;br&gt;&lt;br&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="600" width="160" height="90" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
