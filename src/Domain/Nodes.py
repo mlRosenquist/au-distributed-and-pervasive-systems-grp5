@@ -84,3 +84,10 @@ class Nodes(object):
 
     def setState(class_, wantedState: states):
         class_._currentState = wantedState
+
+
+    #def isTask(class_, stateToChack: tasks) -> bool:
+    #    return stateToChack == class_._currentTask
+
+    def setTask(class_, wantedTask: tasks):
+        class_._currentTask = wantedTask

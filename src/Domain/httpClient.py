@@ -14,7 +14,7 @@ class httpClient:
     def areYouThere(self, target_i: int) -> bool:
         targetEndpoint = self._getEndpoint(target_i)
 
-        r = requests.get(targetEndpoint)
+        r = requests.get(targetEndpoint, timeout=10)
         
         if(r.status_code != 200):
             return False
@@ -25,7 +25,7 @@ class httpClient:
     def areYouNormal(self, target_i):
         targetEndpoint = self._getEndpoint(target_i)
 
-        r = requests.get(targetEndpoint)
+        r = requests.get(targetEndpoint, timeout=10)
         
         if(r.status_code != 200):
             return False
@@ -38,7 +38,7 @@ class httpClient:
 
         data = {}
         data['sender_j'] = Nodes().getSelfId()
-        r = requests.post(targetEndpoint, data=data)
+        r = requests.post(targetEndpoint, data=data, timeout=10)
 
     # Immediate procedures
     def newCoordinator(self, target_i) -> None:
@@ -47,7 +47,7 @@ class httpClient:
         
         data = {}
         data['sender_j'] = sender_j
-        r = requests.post(targetEndpoint, data=data)
+        r = requests.post(targetEndpoint, data=data, timeout=10)
 
     # Immediate procedures
     def ready(self, target_i):
@@ -57,18 +57,34 @@ class httpClient:
         data = {}
         data['sender_j'] = sender_j
         data['work_x'] = "Work"
-        r = requests.post(targetEndpoint, data=data)
+        r = requests.post(targetEndpoint, data=data, timeout=10)
 
     def election(self):
         # Get nodes with higher ids for election process
         higherNodes_j = Nodes().getHigherPriorityNodesThanSelf()
 
         # Check if any higher node ids are alive
-        for node in range(higherNodes_j):
-            
+        for nodeId in range(higherNodes_j):
+            areYouThere = self.areYouThere(nodeId)
+            if(areYouThere):
+                return
+
+        # We are highest priority node alive
+        # Halting all lower priority nodes
+        self.stop()
+        Nodes().setState(Nodes().states.election)
+        Nodes()._haltedBy = Nodes().getSelfId()
+        # Set
+        
+        
+
 
     def check(self):
         print('test')
+
+    def stop(self) -> None:
+        wantedTask = Nodes().tasks.stopped
+        Nodes().setTask(wantedTask)
 
     def _getEndpoint(target_id) -> str:
         return f'http://node{target_id}-svc:5000'
