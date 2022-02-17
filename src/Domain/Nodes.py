@@ -7,6 +7,7 @@ class Nodes(object):
     _leader = -1
     _mutex = threading.Lock()
     _nodesList = []
+    _halt = False
 
     def __new__(class_, *args, **kwargs):
         if not isinstance(class_._instance, class_):
@@ -47,5 +48,17 @@ class Nodes(object):
         if(class_._nodesList == []):
             raise Exception('Node list not yet set', f'Value set to default: {class_._nodesList}')
         return class_._nodesList
+
+    def setHalt(class_, state: bool) -> None:
+        class_._halt = state
+
+    def getHalt(class_) -> bool:
+        return class_._halt
+
+    def getSelfId() -> int:
+        if __debug__:
+            return 1
+        self_id = os.getenv('NODE_ID')
+        return int(self_id)
 
     
