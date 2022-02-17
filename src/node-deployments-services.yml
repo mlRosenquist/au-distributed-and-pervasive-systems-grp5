@@ -14,10 +14,10 @@ spec:
     spec:
       containers:
       - name: node1
-        image: python-docker
-        ports:
-        - containerPort: 80
+        image: node
         imagePullPolicy: Never
+        ports:
+            - containerPort: 5000
         env:
         - name: NO_NODES
           value: "7"
@@ -33,7 +33,10 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 80
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
   selector:
     app: node1
 
@@ -54,9 +57,9 @@ spec:
     spec:
       containers:
       - name: node2
-        image: python-docker
+        image: node
         ports:
-        - containerPort: 80
+        - containerPort: 5000
         imagePullPolicy: Never
         env:
         - name: NO_NODES
@@ -73,7 +76,9 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 80
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
   selector:
     app: node2
 
@@ -94,9 +99,9 @@ spec:
     spec:
       containers:
       - name: node3
-        image: python-docker
+        image: node
         ports:
-        - containerPort: 80
+        - containerPort: 5000
         imagePullPolicy: Never
         env:
         - name: NO_NODES
@@ -113,7 +118,9 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 80
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
   selector:
     app: node3
 
@@ -134,9 +141,9 @@ spec:
     spec:
       containers:
       - name: node4
-        image: python-docker
+        image: node
         ports:
-        - containerPort: 80
+        - containerPort: 5000
         imagePullPolicy: Never
         env:
         - name: NO_NODES
@@ -153,7 +160,9 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 80
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
   selector:
     app: node4
 
@@ -174,9 +183,9 @@ spec:
     spec:
       containers:
       - name: node5
-        image: python-docker
+        image: node
         ports:
-        - containerPort: 80
+        - containerPort: 5000
         imagePullPolicy: Never
         env:
         - name: NO_NODES
@@ -193,7 +202,9 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 80
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
   selector:
     app: node5
 
@@ -214,9 +225,9 @@ spec:
     spec:
       containers:
       - name: node6
-        image: python-docker
+        image: node
         ports:
-        - containerPort: 80
+        - containerPort: 5000
         imagePullPolicy: Never
         env:
         - name: NO_NODES
@@ -233,7 +244,9 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 80
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
   selector:
     app: node6
 
@@ -254,9 +267,9 @@ spec:
     spec:
       containers:
       - name: node7
-        image: python-docker
+        image: node
         ports:
-        - containerPort: 80
+        - containerPort: 5000
         imagePullPolicy: Never
         env:
         - name: NO_NODES
@@ -273,7 +286,9 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 80
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
   selector:
     app: node7
 

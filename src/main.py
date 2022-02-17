@@ -1,4 +1,4 @@
-from flask import Flask, make_response, g, request, send_file
+from flask import Flask, make_response, g, request, send_file, jsonify
 from Domain.Nodes import Nodes
 from Jobs.setupJobs import setupEvents
 
@@ -26,17 +26,19 @@ def updateLeader():
     newLeaderArgs = request.args['newleader']
     return make_response({'message': f'{newLeaderArgs}'})
 
-
 def setupNode():
     #Setup scheduled jobs
     setupEvents()
 
-
+if __name__ == "__main__":
     # Start the Flask app (must be after the endpoint functions)
-    host_local_computer = "localhost" # Listen for connections on the local computer
-    host_local_network = "0.0.0.0" # Listen for connections on the local network
-    app.run(host=host_local_network if False else host_local_computer, port=9000)
+    app.run(debug=True, host="0.0.0.0", port=5000)
+    setupNode()
 
 
-setupNode()
+    
+    
+
+
+
 
