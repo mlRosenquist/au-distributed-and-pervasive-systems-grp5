@@ -29,9 +29,7 @@ class Nodes(object):
         class_._leader = leader
         class_._mutex.release()
 
-    def generateFriendsNodesList(class_) -> None:
-        me = os.getenv('NODE_ID')
-        totalNodes = os.getenv('NO_NODES')
+    def generateFriendsNodesList(class_, me=None, totalNodes=None) -> None:
 
         # If it runs in debug mode, assign none exiting enviourment variables:
         if __debug__:
