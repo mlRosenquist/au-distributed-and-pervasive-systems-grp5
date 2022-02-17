@@ -13,15 +13,15 @@ def greet():
 def areYouThereCommand():
     return make_response({'message': 'areYouTHere!'})
 
-@app.route('/election')
+@app.route('/election', methods=['POST'])
 def electionCommand():
     return make_response({'message': 'election!'})
 
-@app.route('/halt')
+@app.route('/halt', methods=['POST'])
 def haltCommand():
     return make_response({'message': 'halt!'})
 
-@app.route('/leader/update')
+@app.route('/leader/update', methods=['POST'])
 def updateLeader():
     newLeaderArgs = request.args['newleader']
     return make_response({'message': f'{newLeaderArgs}'})
