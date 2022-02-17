@@ -10,7 +10,7 @@ def greet():
     return make_response({'message': 'Hello World!'})
 
 @app.route('/areYouThere',  methods=['GET'])
-def electionCommand():
+def areYouThereCommand():
     return make_response({'message': 'areYouTHere!'})
 
 @app.route('/election')
@@ -18,7 +18,7 @@ def electionCommand():
     return make_response({'message': 'election!'})
 
 @app.route('/halt')
-def electionCommand():
+def haltCommand():
     return make_response({'message': 'halt!'})
 
 @app.route('/leader/update')
