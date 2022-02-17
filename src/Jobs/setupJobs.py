@@ -4,15 +4,15 @@ from apscheduler.schedulers.background import BackgroundScheduler # automated re
 def printScreen():
     print('Hello!')
 
-def checkIfMasterAlive():
-    print('Check master')
+def checkIfLeaderAlive():
+    print('Check leader')
 
 def setupEvents():
     scheduler = BackgroundScheduler()
     
     # Setup jobs here
     scheduler.add_job(func=printScreen, trigger="interval", seconds=10, id='printerScreen')
-    scheduler.add_job(func=checkIfMasterAlive, trigger="interval", seconds=10, id='checkIfMasterAlive')
+    scheduler.add_job(func=checkIfLeaderAlive, trigger="interval", seconds=10, id='checkIfLeaderAlive')
 
     #Start scheduler
     scheduler.start()
