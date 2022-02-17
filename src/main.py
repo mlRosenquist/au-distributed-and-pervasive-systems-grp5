@@ -4,6 +4,7 @@ from Jobs.setupJobs import setupEvents
 
 # Instantiate the Flask app (must be before the endpoint functions)
 app = Flask(__name__)
+nodes = Nodes()
 
 @app.route('/')
 def greet():
@@ -11,8 +12,10 @@ def greet():
 
 @app.route('/areYouThere',  methods=['GET'])
 def areYouThereCommand():
-    if (Nodes.isState("down"))
-    return make_response({'message': 'areYouTHere!'})
+    if nodes.isState(nodes.states.down):
+        return make_response(200)
+    else:
+        return make_response(500)
 
 @app.route('/election', methods=['POST'])
 def electionCommand():
@@ -22,7 +25,7 @@ def electionCommand():
 def haltCommand():
     return make_response({'message': 'halt!'})
 
-@app.route('/leader/update', methods=['POST'])
+@app.route('/newCoordinator', methods=['POST'])
 def updateLeader():
     newLeaderArgs = request.args['newleader']
     return make_response({'message': f'{newLeaderArgs}'})
