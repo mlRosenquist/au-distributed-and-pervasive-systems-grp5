@@ -11,6 +11,7 @@ def greet():
 
 @app.route('/areYouThere',  methods=['GET'])
 def areYouThereCommand():
+    if (Nodes.isState("down"))
     return make_response({'message': 'areYouTHere!'})
 
 @app.route('/election', methods=['POST'])

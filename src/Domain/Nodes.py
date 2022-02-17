@@ -1,3 +1,4 @@
+import enum
 import threading, time, random, os, sys
 
 import numpy as np
@@ -10,8 +11,19 @@ class Nodes(object):
     _nodesList = []
 
     _haltedBy = 0
-    _states = {"down", "reorganizing", "normal", "election"}
-    _currentState = "down"
+
+    class states(enum.Enum):
+        down = "down"
+        reorganizing = "reorganizing"
+        normal = "normal"
+        election = "election"
+
+    class tasks(enum.Enum):
+        working = "working"
+        stopped = "stopped"
+
+    _currentState = states.normal
+    _currentTask = tasks.working
 
     def __new__(class_, *args, **kwargs):
         if not isinstance(class_._instance, class_):
@@ -67,8 +79,8 @@ class Nodes(object):
     def setHaltedBy(class_, haltedBy: int):
         class_._haltedBy = haltedBy
 
-    def isState(class_, stateToChack: str) -> bool:
+    def isState(class_, stateToChack: states) -> bool:
         return stateToChack == class_._currentState
 
-    def setState(class_, wantedState: str):
+    def setState(class_, wantedState: states):
         class_._currentState = wantedState
