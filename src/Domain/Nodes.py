@@ -53,7 +53,7 @@ class Nodes(object):
             raise Exception('Node list not yet set', f'Value set to default: {class_._nodesList}')
         return class_._nodesList
 
-    def getSelfId() -> int:
+    def getSelfId(class_) -> int:
         if __debug__:
             return 1
         self_id = os.getenv('NODE_ID')
