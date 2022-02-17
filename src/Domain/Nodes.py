@@ -1,5 +1,7 @@
 import threading, time, random, os, sys
 
+from numpy import array
+
 class Nodes(object):
     _instance = None
     _leader = -1
@@ -41,5 +43,9 @@ class Nodes(object):
                 continue
             class_._nodesList.append(node)
 
+    def getFriendsNodesList(class_) -> array:
+        if(class_._nodesList == []):
+            raise Exception('Node list not yet set', f'Value set to default: {class_._nodesList}')
+        return class_._nodesList
 
     
