@@ -1,5 +1,6 @@
 import threading, time, random, os, sys
 
+import numpy as np
 from numpy import array
 
 class Nodes(object):
@@ -7,7 +8,10 @@ class Nodes(object):
     _leader = -1
     _mutex = threading.Lock()
     _nodesList = []
-    _halt = False
+
+    _haltedBy = 0
+    _states = {"down", "reorganizing", "normal", "election"}
+    _currentState = "down"
 
     def __new__(class_, *args, **kwargs):
         if not isinstance(class_._instance, class_):
@@ -49,16 +53,24 @@ class Nodes(object):
             raise Exception('Node list not yet set', f'Value set to default: {class_._nodesList}')
         return class_._nodesList
 
-    def setHalt(class_, state: bool) -> None:
-        class_._halt = state
-
-    def getHalt(class_) -> bool:
-        return class_._halt
-
     def getSelfId() -> int:
         if __debug__:
             return 1
         self_id = os.getenv('NODE_ID')
         return int(self_id)
 
-    
+    def getHigherPriorityNodesThanSelf(class_) -> array:
+        higher = [node for node in class_._nodesList if node > class_.getSelfId()]
+        return higher
+
+    def getHaltedBy(class_) -> int:
+        return class_._haltedBy
+
+    def setHaltedBy(class_, haltedBy: int):
+        class_._haltedBy = haltedBy
+
+    def isState(class_, stateToChack: str) -> bool:
+        return stateToChack == class_._currentState
+
+    def setState(class_, wantedState: str):
+        class_._currentState = wantedState
