@@ -22,7 +22,7 @@ class Nodes(object):
         class_._leader = leader
         class_._mutex.release()
 
-    def generateNodesList(class_) -> None:
+    def generateFriendsNodesList(class_) -> None:
         me = os.getenv('NODE_ID')
         totalNodes = os.getenv('NO_NODES')
 
