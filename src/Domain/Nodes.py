@@ -81,8 +81,8 @@ class Nodes(object):
     def setHaltedBy(class_, haltedBy: int):
         class_._haltedBy = haltedBy
 
-    def isState(class_, stateToChack: str) -> bool:
+    def isState(class_, stateToChack: states) -> bool:
         return stateToChack == class_._currentState
 
-    def setState(class_, wantedState: str):
+    def setState(class_, wantedState: states):
         class_._currentState = wantedState
