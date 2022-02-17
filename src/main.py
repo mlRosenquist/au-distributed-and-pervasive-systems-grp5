@@ -1,12 +1,23 @@
 from flask import Flask, make_response, g, request, send_file
+from Domain.Nodes import Nodes
 from Jobs.setupJobs import setupEvents
 
 # Instantiate the Flask app (must be before the endpoint functions)
 app = Flask(__name__)
 
 @app.route('/')
-def Greet():
+def greet():
     return make_response({'message': 'Hello World!'})
+
+@app.route('/election')
+def electionCommand():
+    return make_response({'message': 'election!'})
+
+@app.route('/leader/update')
+def updateLeader():
+    newLeaderArgs = request.args['newleader']
+    return make_response({'message': f'{newLeaderArgs}'})
+
 
 def setupNode():
     #Setup scheduled jobs
