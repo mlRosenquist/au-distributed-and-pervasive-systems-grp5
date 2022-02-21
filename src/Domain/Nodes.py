@@ -14,6 +14,8 @@ class Nodes(object):
     _nodesList = []
     # is S(i)h
     _haltedBy = -1
+    # is S(i)Up
+    _haltedUpNodes = []
 
     class states(enum.Enum):
         down = "down"
