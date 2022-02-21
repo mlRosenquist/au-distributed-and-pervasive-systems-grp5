@@ -86,7 +86,7 @@ class httpClient:
             if(response_statusCode == 200):
                 Nodes()._haltedUpNodes.append(nodeId)
 
-        Nodes()._coordinationLeader = Nodes().getSelfId()
+        Nodes().setCoordinator(Nodes().getSelfId())
 
         newState = Nodes().states.reorganizing
         Nodes().setState(newState)
@@ -109,7 +109,7 @@ class httpClient:
 
     def check(self):
         currentState = Nodes()._currentState
-        coordinationLeader = Nodes()._coordinationLeader
+        coordinationLeader = Nodes().getCoordinator()
 
         if(currentState == Nodes().states.normal and coordinationLeader == Nodes().getSelfId()):
             allNodesButOurself = Nodes().getFriendsNodesList()
@@ -131,7 +131,8 @@ class httpClient:
         currentState = Nodes()._currentState
 
         if(currentState == Nodes()._currentState.normal or currentState == Nodes()._currentState.reorganizing):
-            check = self.areYouThere(Nodes()._coordinationLeader)
+            coordinater = Nodes().getCoordinator()
+            check = self.areYouThere(coordinater)
 
             if(check == False):
                 self.election()

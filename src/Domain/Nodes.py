@@ -37,13 +37,14 @@ class Nodes(object):
         return class_._instance
 
     def getCoordinator(class_) -> int:
-        if(class_.coordinator == -1):
+        if(class_._coordinator == -1):
             raise Exception('Leader is not initialized', f'Value set to default: {class_._coordinator}')
 
-        return class_.coordinator
+        return class_._coordinator
 
     def setCoordinator(class_, coordinator: int):
         class_._mutex.acquire()
+        print(f'Node: {class_.getSelfId()}: coordinator changed from Node ID: {class_.getCoordinator()} to Node ID: {coordinator}')
         class_._coordinator = coordinator
         class_._mutex.release()
 
@@ -84,8 +85,12 @@ class Nodes(object):
         return stateToChack == class_._currentState
 
     def setState(class_, wantedState: states):
+        print(f'Node: {class_.getSelfId()}: state changed from: {class_.getState()} to: {wantedState}')
         class_._currentState = wantedState
 
+
+    def getState(class_):
+        return class_._currentState
 
     #def isTask(class_, stateToChack: tasks) -> bool:
     #    return stateToChack == class_._currentTask
