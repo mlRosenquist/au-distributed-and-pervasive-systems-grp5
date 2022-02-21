@@ -41,19 +41,14 @@ class Nodes(object):
         class_._leader = leader
         class_._mutex.release()
 
-    def generateFriendsNodesList(class_, me=None, totalNodes=None) -> None:
-
-        # If it runs in debug mode, assign none exiting enviourment variables:
-        if __debug__:
-            me = 1
-            totalNodes = 7
-
+    def generateFriendsNodesList(class_, me, totalNodes) -> None:
         if(me == None):
             raise Exception('Local NODE_ID not set', f'Value set to default: {me}')
         if(totalNodes == None):
             raise Exception('Local NO_NODES not set', f'Value set to default: {me}')
 
         for node in range(totalNodes):
+            node = node + 1
             if(node == me):
                 continue
             class_._nodesList.append(node)
