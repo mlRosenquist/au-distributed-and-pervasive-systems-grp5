@@ -33,12 +33,14 @@ class httpClient:
         return True
 
     # Immediate procedures
-    def halt(self, target_i) -> None:
+    def halt(self, target_i) -> int:
         targetEndpoint = self._getEndpoint(target_i)
 
         data = {}
         data['sender_j'] = Nodes().getSelfId()
         r = requests.post(targetEndpoint, data=data, timeout=10)
+
+        return r.status_code
 
     # Immediate procedures
     def newCoordinator(self, target_i) -> None:
@@ -49,8 +51,10 @@ class httpClient:
         data['sender_j'] = sender_j
         r = requests.post(targetEndpoint, data=data, timeout=10)
 
+        return r.status_code
+
     # Immediate procedures
-    def ready(self, target_i):
+    def ready(self, target_i) -> int:
         targetEndpoint = self._getEndpoint(target_i)
         sender_j = Nodes().getSelfId()
         
@@ -58,6 +62,8 @@ class httpClient:
         data['sender_j'] = sender_j
         data['work_x'] = "Work"
         r = requests.post(targetEndpoint, data=data, timeout=10)
+
+        return r.status_code
 
     def election(self):
         # Get nodes with higher ids for election process
@@ -75,8 +81,33 @@ class httpClient:
         Nodes().setState(Nodes().states.election)
         Nodes()._haltedBy = Nodes().getSelfId()
         # Set
+        lowerPriority = Nodes().getLowerPriorityNodesThanSelf()
+        Nodes()._haltedUpNodes = []
+
+        for nodeId in range(lowerPriority):
+            response_statusCode = self.halt(nodeId)
+            if(response_statusCode == 200):
+                Nodes()._haltedUpNodes.append(nodeId)
+
+        Nodes()._coordinationLeader = Nodes().getSelfId()
+
+        newState = Nodes().states.reorganizing
+        Nodes().setState(newState)
+
+        for nodeId in Nodes()._haltedUpNodes:
+            response_statusCode = self.newCoordinator(nodeId)
+            if(response_statusCode == 500):
+                self.election()
+                return;
+
+        for nodeId in Nodes()._haltedUpNodes:
+            response_statusCode = self.ready(nodeId)
+            if(response_statusCode == 500):
+                self.election()
+                return
         
-        
+        newState = Nodes().states.normal
+        Nodes().setState(newState)
 
 
     def check(self):
