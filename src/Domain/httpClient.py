@@ -70,7 +70,7 @@ class httpClient:
         higherNodes_j = Nodes().getHigherPriorityNodesThanSelf()
 
         # Check if any higher node ids are alive
-        for nodeId in range(higherNodes_j):
+        for nodeId in higherNodes_j:
             areYouThere = self.areYouThere(nodeId)
             if(areYouThere):
                 return
@@ -84,7 +84,7 @@ class httpClient:
         lowerPriority = Nodes().getLowerPriorityNodesThanSelf()
         Nodes()._haltedUpNodes = []
 
-        for nodeId in range(lowerPriority):
+        for nodeId in lowerPriority:
             response_statusCode = self.halt(nodeId)
             if(response_statusCode == 200):
                 Nodes()._haltedUpNodes.append(nodeId)
