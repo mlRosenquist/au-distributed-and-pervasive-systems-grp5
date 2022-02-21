@@ -24,10 +24,6 @@ def areYouNormal():
     else:
         return make_response(500)
 
-#@app.route('/election', methods=['POST'])
-#def electionCommand():
-#    return make_response({'message': 'election!'})
-
 @app.route('/halt', methods=['POST'])
 def haltCommand():
     if nodes.isState(nodes.states.down):

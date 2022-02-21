@@ -9,7 +9,7 @@ class Nodes(object):
     _mutex = threading.Lock()
 
     # is S(i)c
-    _coordinationLeader = -1
+    coordinator = -1
     # all nodes but i
     _nodesList = []
     # is S(i)h
@@ -34,13 +34,13 @@ class Nodes(object):
             class_._instance = object.__new__(class_, *args, **kwargs)
         return class_._instance
 
-    def getLeader(class_) -> int:
+    def getCoordinator(class_) -> int:
         if(class_._coordinationLeader == -1):
             raise Exception('Leader is not initialized', f'Value set to default: {class_._coordinationLeader}')
 
         return class_._coordinationLeader
 
-    def setLeader(class_, leader: int):
+    def setCoordinator(class_, leader: int):
         class_._mutex.acquire()
         class_._coordinationLeader = leader
         class_._mutex.release()
