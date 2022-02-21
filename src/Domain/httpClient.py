@@ -22,15 +22,12 @@ class httpClient:
         return True
     
     # Immediate procedures
-    def areYouNormal(self, target_i):
+    def areYouNormal(self, target_i) -> int:
         targetEndpoint = self._getEndpoint(target_i)
 
         r = requests.get(targetEndpoint, timeout=10)
-        
-        if(r.status_code != 200):
-            return False
 
-        return True
+        return r.status_code
 
     # Immediate procedures
     def halt(self, target_i) -> int:
@@ -111,7 +108,24 @@ class httpClient:
 
 
     def check(self):
-        print('test')
+        currentState = Nodes()._currentState
+        coordinationLeader = Nodes()._coordinationLeader
+
+        if(currentState == Nodes().states.normal and coordinationLeader == Nodes().getSelfId()):
+            allNodesButOurself = Nodes().getFriendsNodesList()
+            for node in allNodesButOurself:
+                response_statusCode = self.areYouNormal(node)
+                if(response_statusCode == 500):
+                    continue
+                if(response_statusCode != 200):
+                    self.election()
+                    return
+                    
+
+
+    def recovery(self):
+        Nodes()._haltedBy = -1
+        self.election()
 
     def stop(self) -> None:
         wantedTask = Nodes().tasks.stopped
