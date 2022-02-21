@@ -35,13 +35,13 @@ def haltCommand():
         return make_response(200)
 
 @app.route('/newCoordinator', methods=['POST'])
-def updateLeader():
+def updateCoordinator():
     if nodes.isState(nodes.states.down):
         return make_response(500)
     else:
         senderId = request.json()['sender_j']
         if nodes.getHaltedBy() == senderId and nodes.isState(nodes.states.election):
-            nodes.setLeader(senderId)
+            nodes.setCoordinator(senderId)
             nodes.setState(nodes.states.reorganizing)
         return make_response(200)
 
@@ -51,7 +51,7 @@ def ready():
     taskDescription = request.json()['work_x']
     if nodes.isState(nodes.states.down):
         return make_response(500)
-    elif nodes.isState(nodes.states.reorganizing) and nodes.getLeader() == senderId:
+    elif nodes.isState(nodes.states.reorganizing) and nodes.getCoordinator() == senderId:
         nodes.setState(nodes.states.normal)
         nodes.setTask(taskDescription)
     return make_response(200)

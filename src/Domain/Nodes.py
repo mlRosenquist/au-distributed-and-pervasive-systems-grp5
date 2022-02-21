@@ -43,7 +43,6 @@ class Nodes(object):
         return class_._coordinator
 
     def setCoordinator(class_, coordinator: int):
-        class_._mutex.acquire()
         print(f'Node: {class_.getSelfId()}: coordinator changed from Node ID: {class_.getCoordinator()} to Node ID: {coordinator}')
         class_._coordinator = coordinator
         class_._mutex.release()
