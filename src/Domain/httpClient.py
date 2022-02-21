@@ -127,6 +127,17 @@ class httpClient:
         Nodes()._haltedBy = -1
         self.election()
 
+    def timeout(self):
+        currentState = Nodes()._currentState
+
+        if(currentState == Nodes()._currentState.normal or currentState == Nodes()._currentState.reorganizing):
+            check = self.areYouThere(Nodes()._coordinationLeader)
+
+            if(check == False):
+                self.election()
+        else:
+            self.election()
+
     def stop(self) -> None:
         wantedTask = Nodes().tasks.stopped
         Nodes().setTask(wantedTask)
