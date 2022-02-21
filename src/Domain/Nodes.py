@@ -9,7 +9,7 @@ class Nodes(object):
     _mutex = threading.Lock()
 
     # is S(i)c
-    coordinator = -1
+    _coordinator = -1
     # all nodes but i
     _nodesList = []
     # is S(i)h
@@ -37,14 +37,14 @@ class Nodes(object):
         return class_._instance
 
     def getCoordinator(class_) -> int:
-        if(class_._coordinationLeader == -1):
-            raise Exception('Leader is not initialized', f'Value set to default: {class_._coordinationLeader}')
+        if(class_.coordinator == -1):
+            raise Exception('Leader is not initialized', f'Value set to default: {class_._coordinator}')
 
-        return class_._coordinationLeader
+        return class_.coordinator
 
-    def setCoordinator(class_, leader: int):
+    def setCoordinator(class_, coordinator: int):
         class_._mutex.acquire()
-        class_._coordinationLeader = leader
+        class_._coordinator = coordinator
         class_._mutex.release()
 
     def generateFriendsNodesList(class_, me, totalNodes) -> None:
