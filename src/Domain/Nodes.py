@@ -6,10 +6,13 @@ from numpy import array
 
 class Nodes(object):
     _instance = None
-    _leader = -1
     _mutex = threading.Lock()
-    _nodesList = []
 
+    # is S(i)c
+    _coordinationLeader = -1
+    # all nodes but i
+    _nodesList = []
+    # is S(i)h
     _haltedBy = 0
 
     class states(enum.Enum):
@@ -21,8 +24,9 @@ class Nodes(object):
     class tasks(enum.Enum):
         working = "working"
         stopped = "stopped"
-
+    # is S(i)s
     _currentState = states.normal
+    # is S(i)x
     _currentTask = tasks.working
 
     def __new__(class_, *args, **kwargs):
@@ -31,14 +35,14 @@ class Nodes(object):
         return class_._instance
 
     def getLeader(class_) -> int:
-        if(class_._leader == -1):
-            raise Exception('Leader is not initialized', f'Value set to default: {class_._leader}')
+        if(class_._coordinationLeader == -1):
+            raise Exception('Leader is not initialized', f'Value set to default: {class_._coordinationLeader}')
 
-        return class_._leader
+        return class_._coordinationLeader
 
     def setLeader(class_, leader: int):
         class_._mutex.acquire()
-        class_._leader = leader
+        class_._coordinationLeader = leader
         class_._mutex.release()
 
     def generateFriendsNodesList(class_, me=None, totalNodes=None) -> None:
@@ -91,3 +95,7 @@ class Nodes(object):
 
     def setTask(class_, wantedTask: tasks):
         class_._currentTask = wantedTask
+
+    def getLowerPriorityNodesThanSelf(class_) -> array:
+        lowerPriority = [node for node in class_._nodesList if node < class_.getSelfId()]
+        return lowerPriority;
