@@ -60,7 +60,7 @@ class httpClient:
         
         data = {}
         data['sender_j'] = sender_j
-        data['work_x'] = "Work"
+        data['work_x'] = "working"
         r = requests.post(targetEndpoint, data=data, timeout=10)
 
         return r.status_code

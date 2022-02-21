@@ -13,22 +13,49 @@ def greet():
 @app.route('/areYouThere',  methods=['GET'])
 def areYouThereCommand():
     if nodes.isState(nodes.states.down):
-        return make_response(200)
-    else:
         return make_response(500)
+    else:
+        return make_response(200)
 
-@app.route('/election', methods=['POST'])
-def electionCommand():
-    return make_response({'message': 'election!'})
+#@app.route('/election', methods=['POST'])
+#def electionCommand():
+#    return make_response({'message': 'election!'})
 
 @app.route('/halt', methods=['POST'])
 def haltCommand():
-    return make_response({'message': 'halt!'})
+    if nodes.isState(nodes.states.down):
+        return make_response(500)
+    else:
+        nodes.setState(nodes.states.election)
+        jsonContent = request.json()
+        nodes.setHaltedBy(jsonContent['sender_j'])
+        return make_response(200)
 
 @app.route('/newCoordinator', methods=['POST'])
 def updateLeader():
-    newLeaderArgs = request.args['newleader']
-    return make_response({'message': f'{newLeaderArgs}'})
+    if nodes.isState(nodes.states.down):
+        return make_response(500)
+    else:
+        senderId = request.json()['sender_j']
+        if nodes.getHaltedBy() == senderId and nodes.isState(nodes.states.election):
+            nodes.setLeader(senderId)
+            nodes.setState(nodes.states.reorganizing)
+        return make_response(200)
+
+@app.route('/ready', methods=['POST'])
+def ready():
+    senderId = request.json()['sender_j']
+    if nodes.isState(nodes.states.down):
+        return make_response(500)
+    elif nodes.isState(nodes.states.reorganizing) and nodes.getLeader() == senderId:
+        nodes.setState(nodes.states.normal)
+        nodes.setTask()
+    else:
+        senderId = request.json()['sender_j']
+        if nodes.getHaltedBy() == senderId and nodes.isState(nodes.states.election):
+            nodes.setLeader(senderId)
+            nodes.setState(nodes.states.reorganizing)
+        return make_response(200)
 
 def setupNode():
     #Setup scheduled jobs
