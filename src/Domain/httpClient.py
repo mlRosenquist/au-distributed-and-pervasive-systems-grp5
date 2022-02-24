@@ -7,11 +7,9 @@ from Domain.Nodes import Nodes
 
 class httpClient:
 
-    def __init__(self) -> None:
-        pass
-
     # Immediate procedures
     def areYouThere(self, target_i: int) -> bool:
+        print(target_i)
         targetEndpoint = self._getEndpoint(target_i)
 
         r = requests.get(targetEndpoint, timeout=10)
@@ -143,7 +141,7 @@ class httpClient:
         wantedTask = Nodes().tasks.stopped
         Nodes().setTask(wantedTask)
 
-    def _getEndpoint(target_id) -> str:
+    def _getEndpoint(self, target_id: int) -> str:
         return f'http://node{target_id}-svc:5000'
 
         
