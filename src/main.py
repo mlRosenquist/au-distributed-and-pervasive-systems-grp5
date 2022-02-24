@@ -78,9 +78,10 @@ if __name__ == "__main__":
     setupNode()
 
     me = Nodes().getSelfId()
-    #if(me == 1):
-        #time.sleep(10)
-        #httpClient().election()  
+    print(me)
+    if(me == 1):
+        time.sleep(10)
+        httpClient().election()  
 
     app.run(host="0.0.0.0", port=5000)
   
