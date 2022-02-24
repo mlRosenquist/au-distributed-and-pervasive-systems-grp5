@@ -60,3 +60,5 @@ class Nodes(object):
     def lowerElectionFlag(class_):
         class_._electionFlag = False
 
+    def isElecting(class_) -> bool:
+        return class_._electionFlag

@@ -13,6 +13,7 @@ def greet():
 @app.route('/startElection',  methods=['GET'])
 def startElectionCommand():
     senderId = request.json['sender_j']
+    Nodes().raiseElectionFlagclass_()
     if senderId < Nodes().getSelfId():
         return make_response("200")
     else:
@@ -20,6 +21,7 @@ def startElectionCommand():
 
 @app.route('/newCoordinator', methods=['POST'])
 def updateCoordinator():
+    Nodes().lowerElectionFlag()
     if nodes.isState(nodes.states.down):
         return make_response(500)
     else:
@@ -28,6 +30,10 @@ def updateCoordinator():
             nodes.setCoordinator(senderId)
             nodes.setState(nodes.states.reorganizing)
         return make_response(200)
+
+@app.route('/youAreCoordinator', methods=['POST'])
+def youAreCoordinator():
+    return make_response("200")
 
 def setupNode():
     #Setup scheduled jobs

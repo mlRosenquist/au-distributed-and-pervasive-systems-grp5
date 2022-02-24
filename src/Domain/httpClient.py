@@ -35,6 +35,8 @@ class httpClient:
 
         return r.status_code
 
+    def youAreCoordinator(self, target_i: int):
+
     def election(self):
         # Get nodes with higher ids for election process
         allNodes = Nodes().getFriendsNodesList()
@@ -53,22 +55,10 @@ class httpClient:
             #    if(response_statusCode == 500):
             #        self.election()
             #        return
-
-    def timeout(self):
-        currentState = Nodes()._currentState
-
-        if(currentState == Nodes()._currentState.normal or currentState == Nodes()._currentState.reorganizing):
-            coordinater = Nodes().getCoordinator()
-            check = self.areYouThere(coordinater)
-
-            if(check == False):
-                self.election()
         else:
-            self.election()
+            highestPriority = max(potentialLeaders)
+            # inform the coordinator
 
-    def stop(self) -> None:
-        wantedTask = Nodes().tasks.stopped
-        Nodes().setTask(wantedTask)
 
     def _getEndpoint(target_id) -> str:
         return f'http://node{target_id}-svc:5000'
