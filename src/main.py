@@ -64,7 +64,7 @@ def setupNode():
     #Setup scheduled jobs
     me = Nodes().getSelfId()
     totalNodes = os.getenv('NO_NODES')
-    Nodes().generateFriendsNodesList(me, totalNodes)
+    Nodes().generateFriendsNodesList(me, int(totalNodes))
     setupEvents()
         
 
