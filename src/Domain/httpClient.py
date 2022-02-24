@@ -64,12 +64,16 @@ class httpClient:
         # Get nodes with higher ids for election process
         higherNodes_j = Nodes().getHigherPriorityNodesThanSelf()
 
+        higherNodeReponseOk = False
         # Check if any higher node ids are alive
         for nodeId in higherNodes_j:
             print(f'Contaction node: {nodeId}')
             areYouThere = self.areYouThere(nodeId)
             if(areYouThere):
-                return
+                higherNodeReponseOk = True
+
+        if(higherNodeReponseOk):
+            return
 
         print('No contact, Initialize i am the leader')
         # We are highest priority node alive
