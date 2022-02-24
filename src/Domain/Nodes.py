@@ -45,7 +45,6 @@ class Nodes(object):
     def setCoordinator(class_, coordinator: int):
         print(f'Node: {class_.getSelfId()}: coordinator changed from Node ID: {class_.getCoordinator()} to Node ID: {coordinator}')
         class_._coordinator = coordinator
-        class_._mutex.release()
 
     def generateFriendsNodesList(class_, me, totalNodes) -> None:
         if(me == None):

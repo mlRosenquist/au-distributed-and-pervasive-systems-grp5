@@ -66,10 +66,12 @@ class httpClient:
 
         # Check if any higher node ids are alive
         for nodeId in higherNodes_j:
+            print(f'Contaction node: {nodeId}')
             areYouThere = self.areYouThere(nodeId)
             if(areYouThere):
                 return
 
+        print('No contact, Initialize i am the leader')
         # We are highest priority node alive
         # Halting all lower priority nodes
         self.stop()
