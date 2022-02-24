@@ -62,7 +62,7 @@ def setupNode():
 
 if __name__ == "__main__":
     # Start the Flask app (must be after the endpoint functions)
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    #app.run(debug=True, host="0.0.0.0", port=5000)
     setupNode()
     app.run(host="0.0.0.0", port=5000)
 
