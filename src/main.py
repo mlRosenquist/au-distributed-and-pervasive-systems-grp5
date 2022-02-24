@@ -5,6 +5,7 @@ from Jobs.setupJobs import setupEvents
 from multiprocessing.connection import wait
 import os, time
 from Domain.httpClient import httpClient
+import asyncio
 
 # Instantiate the Flask app (must be before the endpoint functions)
 app = Flask(__name__)
@@ -20,6 +21,7 @@ def areYouThereCommand():
         return make_response("500")
     else:
         print('I am not down, sending 200')
+        asyncio.run(httpClient().election())
         return make_response("200")
 
 @app.route('/areYouNormal', methods=['GET'])

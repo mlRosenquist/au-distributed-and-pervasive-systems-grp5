@@ -2,3 +2,4 @@ Flask
 apscheduler
 numpy
 requests
+asyncio
