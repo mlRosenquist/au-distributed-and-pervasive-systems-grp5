@@ -2,7 +2,9 @@ from distutils.log import debug
 from flask import Flask, make_response, g, request, send_file, jsonify
 from Domain.Nodes import Nodes
 from Jobs.setupJobs import setupEvents
-import os 
+from multiprocessing.connection import wait
+import os, time
+from Domain.httpClient import httpClient
 
 # Instantiate the Flask app (must be before the endpoint functions)
 app = Flask(__name__)
@@ -60,7 +62,13 @@ def ready():
 
 def setupNode():
     #Setup scheduled jobs
+    me = Nodes().getSelfId()
+    totalNodes = os.getenv('NO_NODES')
+    if __debug__:
+        totalNodes = 7
+    Nodes().generateFriendsNodesList(me, totalNodes)
     setupEvents()
+        
 
 if __name__ == "__main__":
     # Start the Flask app (must be after the endpoint functions)
@@ -68,7 +76,14 @@ if __name__ == "__main__":
     print(f'There is in total {os.environ.get("NO_NODES")} nodes', flush=True)
     
     setupNode()
+
+    me = Nodes().getSelfId()
+    #if(me == 1):
+        #time.sleep(10)
+        #httpClient().election()  
+
     app.run(host="0.0.0.0", port=5000)
+  
 
 
 

@@ -57,6 +57,7 @@ class Nodes(object):
             node = node + 1
             if(node == me):
                 continue
+            print(f'My nodeId: {me} - Added nodeId to nodelist: {node}')
             class_._nodesList.append(node)
 
     def getFriendsNodesList(class_) -> array:

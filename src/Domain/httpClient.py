@@ -7,14 +7,12 @@ from Domain.Nodes import Nodes
 
 class httpClient:
 
-    def __init__(self) -> None:
-        pass
-
     # Immediate procedures
     def areYouThere(self, target_i: int) -> bool:
+        print(target_i)
         targetEndpoint = self._getEndpoint(target_i)
 
-        r = requests.get(targetEndpoint, timeout=10)
+        r = requests.get(f'{targetEndpoint}/areYouThere', timeout=10)
         
         if(r.status_code != 200):
             return False
@@ -25,7 +23,7 @@ class httpClient:
     def areYouNormal(self, target_i) -> int:
         targetEndpoint = self._getEndpoint(target_i)
 
-        r = requests.get(targetEndpoint, timeout=10)
+        r = requests.get(f'{targetEndpoint}/areYouNormal', timeout=10)
 
         return r.status_code
 
@@ -35,7 +33,7 @@ class httpClient:
 
         data = {}
         data['sender_j'] = Nodes().getSelfId()
-        r = requests.post(targetEndpoint, data=data, timeout=10)
+        r = requests.post(f'{targetEndpoint}/halt', data=data, timeout=10)
 
         return r.status_code
 
@@ -46,7 +44,7 @@ class httpClient:
         
         data = {}
         data['sender_j'] = sender_j
-        r = requests.post(targetEndpoint, data=data, timeout=10)
+        r = requests.post(f'{targetEndpoint}/newCoordinator', data=data, timeout=10)
 
         return r.status_code
 
@@ -58,7 +56,7 @@ class httpClient:
         data = {}
         data['sender_j'] = sender_j
         data['work_x'] = "working"
-        r = requests.post(targetEndpoint, data=data, timeout=10)
+        r = requests.post(f'{targetEndpoint}/ready', data=data, timeout=10)
 
         return r.status_code
 
@@ -143,7 +141,7 @@ class httpClient:
         wantedTask = Nodes().tasks.stopped
         Nodes().setTask(wantedTask)
 
-    def _getEndpoint(target_id) -> str:
+    def _getEndpoint(self, target_id: int) -> str:
         return f'http://node{target_id}-svc:5000'
 
         
