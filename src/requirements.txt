@@ -1,5 +1,5 @@
-Flask
 apscheduler
 numpy
 requests
 asyncio
+Flask[Async]

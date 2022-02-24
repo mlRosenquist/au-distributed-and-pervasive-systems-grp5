@@ -18,6 +18,13 @@ class httpClient:
             return False
 
         return True
+
+    def startElection(self, target_i: int) -> bool:
+        print(target_i)
+        targetEndpoint = self._getEndpoint(target_i)
+
+        r = requests.get(f'{targetEndpoint}/election', timeout=10)
+        print(f'Received status code: {r.status_code}')
     
     # Immediate procedures
     def areYouNormal(self, target_i) -> int:
@@ -33,7 +40,7 @@ class httpClient:
 
         data = {}
         data['sender_j'] = Nodes().getSelfId()
-        r = requests.post(f'{targetEndpoint}/halt', data=data, timeout=10)
+        r = requests.post(f'{targetEndpoint}/halt', json=data, timeout=10)
 
         return r.status_code
 
@@ -44,7 +51,7 @@ class httpClient:
         
         data = {}
         data['sender_j'] = sender_j
-        r = requests.post(f'{targetEndpoint}/newCoordinator', data=data, timeout=10)
+        r = requests.post(f'{targetEndpoint}/newCoordinator', json=data, timeout=10)
 
         return r.status_code
 
@@ -56,7 +63,7 @@ class httpClient:
         data = {}
         data['sender_j'] = sender_j
         data['work_x'] = "working"
-        r = requests.post(f'{targetEndpoint}/ready', data=data, timeout=10)
+        r = requests.post(f'{targetEndpoint}/ready', json=data, timeout=10)
 
         return r.status_code
 
@@ -70,10 +77,12 @@ class httpClient:
             print(f'Contaction node: {nodeId}')
             areYouThere = self.areYouThere(nodeId)
             if(areYouThere):
+                #self.startElection(nodeId)
                 higherNodeReponseOk = True
 
         if(higherNodeReponseOk):
             return
+            
 
         print('No contact, Initialize i am the leader')
         # We are highest priority node alive

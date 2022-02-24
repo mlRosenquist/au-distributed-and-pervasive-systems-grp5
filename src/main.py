@@ -1,4 +1,5 @@
 from distutils.log import debug
+from http.client import HTTP_PORT
 from flask import Flask, make_response, g, request, send_file, jsonify
 from Domain.Nodes import Nodes
 from Jobs.setupJobs import setupEvents
@@ -16,17 +17,17 @@ def greet():
     return make_response({'message': 'Hello World!'})
 
 @app.route('/election',  methods=['GET'])
-def election():
-    httpClient().election()
+async def election():
+    await httpClient().election()
     return make_response("OK")
 
 @app.route('/areYouThere',  methods=['GET'])
-def areYouThereCommand():
+async def areYouThereCommand():
     if nodes.isState(nodes.states.down):
         return make_response("500")
     else:
+        await httpClient().election()
         print('I am not down, sending 200')
-        asyncio.run(httpClient().election())
         return make_response("200")
 
 @app.route('/areYouNormal', methods=['GET'])
@@ -51,7 +52,7 @@ def updateCoordinator():
     if nodes.isState(nodes.states.down):
         return make_response("500")
     else:
-        senderId = request.json()['sender_j']
+        senderId = request.json['sender_j']
         if nodes.getHaltedBy() == senderId and nodes.isState(nodes.states.election):
             nodes.setCoordinator(senderId)
             nodes.setState(nodes.states.reorganizing)
@@ -59,8 +60,8 @@ def updateCoordinator():
 
 @app.route('/ready', methods=['POST'])
 def ready():
-    senderId = request.json()['sender_j']
-    taskDescription = request.json()['work_x']
+    senderId = request.json['sender_j']
+    taskDescription = request.json['work_x']
     if nodes.isState(nodes.states.down):
         return make_response("500")
     elif nodes.isState(nodes.states.reorganizing) and nodes.getCoordinator() == senderId:
