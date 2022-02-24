@@ -65,8 +65,6 @@ class Nodes(object):
         return class_._nodesList
 
     def getSelfId(class_) -> int:
-        if __debug__:
-            return 1
         self_id = os.getenv('NODE_ID')
         return int(self_id)
 
