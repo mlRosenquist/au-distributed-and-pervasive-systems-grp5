@@ -13,7 +13,7 @@ class httpClient:
         targetEndpoint = self._getEndpoint(target_i)
 
         r = requests.get(f'{targetEndpoint}/areYouThere', timeout=10)
-        
+        print(f'Received status code: {r.status_code}')        
         if(r.status_code != 200):
             return False
 

@@ -19,6 +19,7 @@ def areYouThereCommand():
     if nodes.isState(nodes.states.down):
         return make_response(500)
     else:
+        print('I am not down, sending 200')
         return make_response(200)
 
 @app.route('/areYouNormal', methods=['GET'])
