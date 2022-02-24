@@ -10,26 +10,10 @@ class Nodes(object):
 
     # is S(i)c
     _coordinator = -1
+    # election flag
+    _electionFlag = False
     # all nodes but i
     _nodesList = []
-    # is S(i)h
-    _haltedBy = -1
-    # is S(i)Up
-    _haltedUpNodes = []
-
-    class states(enum.Enum):
-        down = "down"
-        reorganizing = "reorganizing"
-        normal = "normal"
-        election = "election"
-
-    class tasks(enum.Enum):
-        working = "working"
-        stopped = "stopped"
-    # is S(i)s
-    _currentState = states.normal
-    # is S(i)x
-    _currentTask = tasks.working
 
     def __new__(class_, *args, **kwargs):
         if not isinstance(class_._instance, class_):
@@ -70,33 +54,9 @@ class Nodes(object):
         self_id = os.getenv('NODE_ID')
         return int(self_id)
 
-    def getHigherPriorityNodesThanSelf(class_) -> array:
-        higher = [node for node in class_._nodesList if node > class_.getSelfId()]
-        return higher
+    def raiseElectionFlagclass_(class_):
+        class_._electionFlag = True
 
-    def getHaltedBy(class_) -> int:
-        return class_._haltedBy
+    def lowerElectionFlag(class_):
+        class_._electionFlag = False
 
-    def setHaltedBy(class_, haltedBy: int):
-        class_._haltedBy = haltedBy
-
-    def isState(class_, stateToChack: states) -> bool:
-        return stateToChack == class_._currentState
-
-    def setState(class_, wantedState: states):
-        print(f'Node: {class_.getSelfId()}: state changed from: {class_.getState()} to: {wantedState}')
-        class_._currentState = wantedState
-
-
-    def getState(class_):
-        return class_._currentState
-
-    #def isTask(class_, stateToChack: tasks) -> bool:
-    #    return stateToChack == class_._currentTask
-
-    def setTask(class_, wantedTask: tasks):
-        class_._currentTask = wantedTask
-
-    def getLowerPriorityNodesThanSelf(class_) -> array:
-        lowerPriority = [node for node in class_._nodesList if node < class_.getSelfId()]
-        return lowerPriority;
