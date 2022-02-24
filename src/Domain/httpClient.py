@@ -67,7 +67,7 @@ class httpClient:
 
         return r.status_code
 
-    def election(self):
+    async def election(self):
         # Get nodes with higher ids for election process
         higherNodes_j = Nodes().getHigherPriorityNodesThanSelf()
 
