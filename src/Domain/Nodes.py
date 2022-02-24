@@ -37,9 +37,6 @@ class Nodes(object):
         return class_._instance
 
     def getCoordinator(class_) -> int:
-        if(class_._coordinator == -1):
-            raise Exception('Leader is not initialized', f'Value set to default: {class_._coordinator}')
-
         return class_._coordinator
 
     def setCoordinator(class_, coordinator: int):

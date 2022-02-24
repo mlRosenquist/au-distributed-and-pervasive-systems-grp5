@@ -15,6 +15,11 @@ nodes = Nodes()
 def greet():
     return make_response({'message': 'Hello World!'})
 
+@app.route('/election',  methods=['GET'])
+def election():
+    httpClient().election()
+    return make_response("OK")
+
 @app.route('/areYouThere',  methods=['GET'])
 def areYouThereCommand():
     if nodes.isState(nodes.states.down):
@@ -37,7 +42,7 @@ def haltCommand():
         return make_response("500")
     else:
         nodes.setState(nodes.states.election)
-        jsonContent = request.json()
+        jsonContent = request.json
         nodes.setHaltedBy(jsonContent['sender_j'])
         return make_response("200")
 
@@ -80,9 +85,9 @@ if __name__ == "__main__":
 
     me = Nodes().getSelfId()
     print(me)
-    if(me == 1):
-        time.sleep(10)
-        httpClient().election()  
+    # if(me == 1):
+    #     time.sleep(10)
+    #     httpClient().election()  
 
     app.run(host="0.0.0.0", port=5000)
   
