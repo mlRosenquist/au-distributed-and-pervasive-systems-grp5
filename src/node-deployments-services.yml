@@ -19,7 +19,7 @@ spec:
             - containerPort: 5000
         env:
         - name: NO_NODES
-          value: "3"
+          value: "7"
         - name: NODE_ID
           value: "1"
         - name: PYTHONUNBUFFERED
@@ -64,7 +64,7 @@ spec:
         - containerPort: 5000
         env:
         - name: NO_NODES
-          value: "3"
+          value: "7"
         - name: NODE_ID
           value: "2"
         - name: PYTHONUNBUFFERED
@@ -107,7 +107,7 @@ spec:
         - containerPort: 5000
         env:
         - name: NO_NODES
-          value: "3"
+          value: "7"
         - name: NODE_ID
           value: "3"
         - name: PYTHONUNBUFFERED
@@ -128,177 +128,177 @@ spec:
   selector:
     app: node3
 
-# --- 
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata: 
-#   name: node4
-# spec:
-#   selector:
-#     matchLabels:
-#       app: node4
-#   replicas: 1
-#   template:
-#     metadata:
-#       labels:
-#         app: node4
-#     spec:
-#       containers:
-#       - name: node4
-#         image: mortenlyngosenquist/node:latest
-#         ports:
-#         - containerPort: 5000
-#         env:
-#         - name: NO_NODES
-#           value: "3"
-#         - name: NODE_ID
-#           value: "4"
-#         - name: PYTHONUNBUFFERED
-#           value: "1"
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: node4-svc
-#   labels:
-#     app: node4
-# spec:
-#   type: LoadBalancer
-#   ports:
-#   - port: 5000
-#     protocol: TCP
-#     targetPort: 5000
-#   selector:
-#     app: node4
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: node4
+spec:
+  selector:
+    matchLabels:
+      app: node4
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: node4
+    spec:
+      containers:
+      - name: node4
+        image: mortenlyngosenquist/node:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: NO_NODES
+          value: "7"
+        - name: NODE_ID
+          value: "4"
+        - name: PYTHONUNBUFFERED
+          value: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node4-svc
+  labels:
+    app: node4
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: node4
 
-# --- 
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata: 
-#   name: node5
-# spec:
-#   selector:
-#     matchLabels:
-#       app: node5
-#   replicas: 1
-#   template:
-#     metadata:
-#       labels:
-#         app: node5
-#     spec:
-#       containers:
-#       - name: node5
-#         image: mortenlyngosenquist/node:latest
-#         ports:
-#         - containerPort: 5000
-#         env:
-#         - name: NO_NODES
-#           value: "3"
-#         - name: NODE_ID
-#           value: "5"
-#         - name: PYTHONUNBUFFERED
-#           value: "1"
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: node5-svc
-#   labels:
-#     app: node5
-# spec:
-#   type: LoadBalancer
-#   ports:
-#   - port: 5000
-#     protocol: TCP
-#     targetPort: 5000
-#   selector:
-#     app: node5
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: node5
+spec:
+  selector:
+    matchLabels:
+      app: node5
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: node5
+    spec:
+      containers:
+      - name: node5
+        image: mortenlyngosenquist/node:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: NO_NODES
+          value: "7"
+        - name: NODE_ID
+          value: "5"
+        - name: PYTHONUNBUFFERED
+          value: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node5-svc
+  labels:
+    app: node5
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: node5
 
-# --- 
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata: 
-#   name: node6
-# spec:
-#   selector:
-#     matchLabels:
-#       app: node6
-#   replicas: 1
-#   template:
-#     metadata:
-#       labels:
-#         app: node6
-#     spec:
-#       containers:
-#       - name: node6
-#         image: mortenlyngosenquist/node:latest
-#         ports:
-#         - containerPort: 5000
-#         env:
-#         - name: NO_NODES
-#           value: "3"
-#         - name: NODE_ID
-#           value: "6"
-#         - name: PYTHONUNBUFFERED
-#           value: "1"
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: node6-svc
-#   labels:
-#     app: node6
-# spec:
-#   type: LoadBalancer
-#   ports:
-#   - port: 5000
-#     protocol: TCP
-#     targetPort: 5000
-#   selector:
-#     app: node6
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: node6
+spec:
+  selector:
+    matchLabels:
+      app: node6
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: node6
+    spec:
+      containers:
+      - name: node6
+        image: mortenlyngosenquist/node:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: NO_NODES
+          value: "7"
+        - name: NODE_ID
+          value: "6"
+        - name: PYTHONUNBUFFERED
+          value: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node6-svc
+  labels:
+    app: node6
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: node6
 
-# --- 
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata: 
-#   name: node7
-# spec:
-#   selector:
-#     matchLabels:
-#       app: node7
-#   replicas: 1
-#   template:
-#     metadata:
-#       labels:
-#         app: node7
-#     spec:
-#       containers:
-#       - name: node7
-#         image: mortenlyngosenquist/node:latest
-#         ports:
-#         - containerPort: 5000
-#         env:
-#         - name: NO_NODES
-#           value: "3"
-#         - name: NODE_ID
-#           value: "3"
-#         - name: PYTHONUNBUFFERED
-#           value: "1"
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: node7-svc
-#   labels:
-#     app: node7
-# spec:
-#   type: LoadBalancer
-#   ports:
-#   - port: 5000
-#     protocol: TCP
-#     targetPort: 5000
-#   selector:
-#     app: node7
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: node7
+spec:
+  selector:
+    matchLabels:
+      app: node7
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: node7
+    spec:
+      containers:
+      - name: node7
+        image: mortenlyngosenquist/node:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: NO_NODES
+          value: "7"
+        - name: NODE_ID
+          value: "7"
+        - name: PYTHONUNBUFFERED
+          value: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node7-svc
+  labels:
+    app: node7
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: node7
 
 
 

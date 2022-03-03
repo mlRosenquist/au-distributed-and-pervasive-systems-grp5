@@ -9,8 +9,7 @@ class httpClient:
 
     # Immediate procedures
     def areYouThere(self, target_i: int) -> bool:
-        print(target_i)
-        targetEndpoint = self._getEndpoint(target_i)
+        targetEndpoint = self.getEndpoint(target_i)
 
         r = requests.get(f'{targetEndpoint}/areYouThere', timeout=10)
         print(f'Received status code: {r.status_code}')        
@@ -20,15 +19,14 @@ class httpClient:
         return True
 
     def startElection(self, target_i: int) -> bool:
-        print(target_i)
-        targetEndpoint = self._getEndpoint(target_i)
+        targetEndpoint = self.getEndpoint(target_i)
 
         r = requests.get(f'{targetEndpoint}/election', timeout=10)
         print(f'Received status code: {r.status_code}')
     
     # Immediate procedures
     def areYouNormal(self, target_i) -> int:
-        targetEndpoint = self._getEndpoint(target_i)
+        targetEndpoint = self.getEndpoint(target_i)
 
         r = requests.get(f'{targetEndpoint}/areYouNormal', timeout=10)
 
@@ -36,7 +34,7 @@ class httpClient:
 
     # Immediate procedures
     def halt(self, target_i) -> int:
-        targetEndpoint = self._getEndpoint(target_i)
+        targetEndpoint = self.getEndpoint(target_i)
 
         data = {}
         data['sender_j'] = Nodes().getSelfId()
@@ -46,7 +44,7 @@ class httpClient:
 
     # Immediate procedures
     def newCoordinator(self, target_i) -> None:
-        targetEndpoint = self._getEndpoint(target_i)
+        targetEndpoint = self.getEndpoint(target_i)
         sender_j = Nodes().getSelfId()
         
         data = {}
@@ -57,7 +55,7 @@ class httpClient:
 
     # Immediate procedures
     def ready(self, target_i) -> int:
-        targetEndpoint = self._getEndpoint(target_i)
+        targetEndpoint = self.getEndpoint(target_i)
         sender_j = Nodes().getSelfId()
         
         data = {}
@@ -67,20 +65,29 @@ class httpClient:
 
         return r.status_code
 
-    async def election(self):
+    async def election(self):       
+        if(Nodes().isState(Nodes().states.election)):
+            return
+
         # Get nodes with higher ids for election process
         higherNodes_j = Nodes().getHigherPriorityNodesThanSelf()
 
         higherNodeReponseOk = False
+        haltedBy = None
         # Check if any higher node ids are alive
         for nodeId in higherNodes_j:
             print(f'Contaction node: {nodeId}')
             areYouThere = self.areYouThere(nodeId)
+            
             if(areYouThere):
-                #self.startElection(nodeId)
+                self.startElection(nodeId)
                 higherNodeReponseOk = True
+                haltedBy = nodeId
 
         if(higherNodeReponseOk):
+            # Should be halted when we get response from higher node 
+            #Nodes().setState(Nodes().states.election)
+            #Nodes().setHaltedBy(haltedBy)
             return
             
 
@@ -107,15 +114,70 @@ class httpClient:
         for nodeId in Nodes()._haltedUpNodes:
             response_statusCode = self.newCoordinator(nodeId)
             if(response_statusCode == 500):
-                self.election()
-                return;
+                await self.election()
+                return
 
         for nodeId in Nodes()._haltedUpNodes:
             response_statusCode = self.ready(nodeId)
             if(response_statusCode == 500):
-                self.election()
+                await self.election()
                 return
         
+        newState = Nodes().states.normal
+        Nodes().setState(newState)
+
+    def electionSync(self):
+        print(Nodes().getState())
+        print(Nodes().isState(Nodes().states.election))
+        if(Nodes().isState(Nodes().states.election)):
+            return
+        # Get nodes with higher ids for election process
+        higherNodes_j = Nodes().getHigherPriorityNodesThanSelf()
+
+        higherNodeReponseOk = False
+        # Check if any higher node ids are alive
+        for nodeId in higherNodes_j:
+            print(f'Contaction node: {nodeId}')
+            areYouThere = self.areYouThere(nodeId)
+            if (areYouThere):
+                self.startElection(nodeId)
+                higherNodeReponseOk = True
+
+        if (higherNodeReponseOk):
+            return
+
+        print('No contact, Initialize i am the leader')
+        # We are highest priority node alive
+        # Halting all lower priority nodes
+        self.stop()
+        Nodes().setState(Nodes().states.election)
+        Nodes()._haltedBy = Nodes().getSelfId()
+        # Set
+        lowerPriority = Nodes().getLowerPriorityNodesThanSelf()
+        Nodes()._haltedUpNodes = []
+
+        for nodeId in lowerPriority:
+            response_statusCode = self.halt(nodeId)
+            if (response_statusCode == 200):
+                Nodes()._haltedUpNodes.append(nodeId)
+
+        Nodes().setCoordinator(Nodes().getSelfId())
+
+        newState = Nodes().states.reorganizing
+        Nodes().setState(newState)
+
+        for nodeId in Nodes()._haltedUpNodes:
+            response_statusCode = self.newCoordinator(nodeId)
+            if (response_statusCode == 500):
+                self.election()
+                return
+
+        for nodeId in Nodes()._haltedUpNodes:
+            response_statusCode = self.ready(nodeId)
+            if (response_statusCode == 500):
+                self.election()
+                return
+
         newState = Nodes().states.normal
         Nodes().setState(newState)
 
@@ -156,7 +218,7 @@ class httpClient:
         wantedTask = Nodes().tasks.stopped
         Nodes().setTask(wantedTask)
 
-    def _getEndpoint(self, target_id: int) -> str:
+    def getEndpoint(self, target_id: int) -> str:
         return f'http://node{target_id}-svc:5000'
 
         

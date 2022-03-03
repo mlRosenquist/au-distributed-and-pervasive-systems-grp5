@@ -7,7 +7,7 @@ from numpy import array
 class Nodes(object):
     _instance = None
     _mutex = threading.Lock()
-
+    amountMessages = 0
     # is S(i)c
     _coordinator = -1
     # all nodes but i
