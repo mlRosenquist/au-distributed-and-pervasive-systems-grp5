@@ -1,6 +1,7 @@
 from flask import Flask, make_response, g, request, send_file, jsonify
 from Domain.Nodes import Nodes
 from Jobs.setupJobs import setupEvents
+from Domain.httpClient import httpClient
 
 # Instantiate the Flask app (must be before the endpoint functions)
 app = Flask(__name__)
@@ -12,28 +13,36 @@ def greet():
 
 @app.route('/startElection',  methods=['GET'])
 def startElectionCommand():
-    senderId = request.json['sender_j']
-    Nodes().raiseElectionFlagclass_()
-    if senderId < Nodes().getSelfId():
-        return make_response("200")
+    if not Nodes()._down:
+        Nodes().raiseElectionFlag()
+        senderId = request.json['sender_j']
+        if Nodes().getSelfId() > senderId:
+            return make_response("200")
+        else:
+            return make_response("500")
     else:
         return make_response("500")
 
 @app.route('/newCoordinator', methods=['POST'])
 def updateCoordinator():
-    Nodes().lowerElectionFlag()
-    if nodes.isState(nodes.states.down):
-        return make_response(500)
+    if Nodes()._down:
+        return make_response("500")
     else:
-        senderId = request.json['sender_j']
-        if nodes.getHaltedBy() == senderId and nodes.isState(nodes.states.election):
+        if Nodes().isElecting():
+            Nodes().lowerElectionFlag()
+            senderId = request.json['sender_j']
             nodes.setCoordinator(senderId)
-            nodes.setState(nodes.states.reorganizing)
-        return make_response(200)
+        else:
+            return make_response("500")
+        return make_response("200")
 
-@app.route('/youAreCoordinator', methods=['POST'])
-def youAreCoordinator():
-    return make_response("200")
+@app.route('/takeover', methods=['POST'])
+def takeover():
+    if not Nodes()._down:
+        httpClient().checkHigherOrBecomeCoordinator()
+        return make_response("200")
+    else:
+        return make_response("500")
 
 def setupNode():
     #Setup scheduled jobs

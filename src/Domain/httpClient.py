@@ -2,8 +2,7 @@ from http import client
 from flask import request
 from numpy import array
 import requests
-
-from Domain.Nodes import Nodes
+import Nodes
 
 class httpClient:
 
@@ -35,7 +34,9 @@ class httpClient:
 
         return r.status_code
 
-    def youAreCoordinator(self, target_i: int):
+    def takeover(self, target_i: int):
+        targetEndpoint = self._getEndpoint(target_i)
+        r = requests.post(targetEndpoint, timeout=10)
 
     def election(self):
         # Get nodes with higher ids for election process
@@ -44,21 +45,35 @@ class httpClient:
 
         # Check if any higher node ids are alive
         for nodeId in allNodes:
-            startElection = self.startElection(nodeId)
-            if startElection:
+            electionStatusCode = self.startElection(nodeId)
+            if electionStatusCode == 200:
                 potentialLeaders.append(nodeId)
 
         if potentialLeaders:
-            #become leader...
-            #for nodeId in Nodes().:
-            #    response_statusCode = self.newCoordinator(nodeId)
-            #    if(response_statusCode == 500):
-            #        self.election()
-            #        return
+            highestPriorityNode = max(potentialLeaders)
+            self.takeover(highestPriorityNode)
         else:
-            highestPriority = max(potentialLeaders)
-            # inform the coordinator
+            Nodes()._coordinator = Nodes().getSelfId()
+            for nodeId in Nodes().getHigherPriorityNodesThanSelf():
+                response_statusCode = self.newCoordinator(nodeId)
+                if(response_statusCode == 500):
+                    self.election()
+                    return
 
+    def checkHigherOrBecomeCoordinator(self):
+        potentialLeaders = []
+
+        for nodeId in Nodes().getHigherPriorityNodesThanSelf():
+            checkStatus = self.startElection(nodeId)
+            if checkStatus == 200:
+                potentialLeaders.append(nodeId)
+
+        if potentialLeaders:
+            highestPriorityNode = max(potentialLeaders)
+            self.takeover(highestPriorityNode)
+        else:
+            for nodeId in Nodes().generateFriendsNodesList():
+                self.newCoordinator(nodeId)
 
     def _getEndpoint(target_id) -> str:
         return f'http://node{target_id}-svc:5000'

@@ -12,6 +12,8 @@ class Nodes(object):
     _coordinator = -1
     # election flag
     _electionFlag = False
+    # down flag
+    _down = False
     # all nodes but i
     _nodesList = []
 
@@ -47,6 +49,10 @@ class Nodes(object):
         if(class_._nodesList == []):
             raise Exception('Node list not yet set', f'Value set to default: {class_._nodesList}')
         return class_._nodesList
+
+    def getHigherPriorityNodesThanSelf(class_) -> array:
+        higher = [node for node in class_._nodesList if node > class_.getSelfId()]
+        return higher
 
     def getSelfId(class_) -> int:
         if __debug__:
