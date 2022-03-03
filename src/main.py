@@ -17,32 +17,32 @@ def startElectionCommand():
         Nodes().raiseElectionFlag()
         senderId = request.json['sender_j']
         if Nodes().getSelfId() > senderId:
-            return make_response("200")
+            return make_response("200", 200)
         else:
-            return make_response("500")
+            return make_response("500", 500)
     else:
-        return make_response("500")
+        return make_response("500", 500)
 
 @app.route('/newCoordinator', methods=['POST'])
 def updateCoordinator():
     if Nodes()._down:
-        return make_response("500")
+        return make_response("500", 500)
     else:
         if Nodes().isElecting():
             Nodes().lowerElectionFlag()
             senderId = request.json['sender_j']
             nodes.setCoordinator(senderId)
         else:
-            return make_response("500")
-        return make_response("200")
+            return make_response("500", 500)
+        return make_response("200", 200)
 
 @app.route('/takeover', methods=['POST'])
 def takeover():
     if not Nodes()._down:
         httpClient().checkHigherOrBecomeCoordinator()
-        return make_response("200")
+        return make_response("200", 200)
     else:
-        return make_response("500")
+        return make_response("500", 500)
 
 def setupNode():
     #Setup scheduled jobs
