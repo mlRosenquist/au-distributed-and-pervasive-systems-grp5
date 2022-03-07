@@ -312,7 +312,7 @@
                     <mxGeometry x="60" y="160" width="120" height="350" as="geometry"/>
                 </mxCell>
                 <mxCell id="i4y8dqKGQGeBQtjlfL8C-5" value="electionFlag: true" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="i4y8dqKGQGeBQtjlfL8C-4">
-                    <mxGeometry x="10" y="63" width="100" height="30" as="geometry"/>
+                    <mxGeometry x="10" y="59" width="100" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="i4y8dqKGQGeBQtjlfL8C-11" value=":Node 2" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" vertex="1" parent="i4y8dqKGQGeBQtjlfL8C-1">
                     <mxGeometry x="200" y="160" width="107.5" height="350" as="geometry"/>
