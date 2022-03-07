@@ -7,7 +7,7 @@ from numpy import array
 class Nodes(object):
     _instance = None
     _mutex = threading.Lock()
-
+    amountMessages = 0
     # is S(i)c
     _coordinator = -1
     # election flag
@@ -23,15 +23,11 @@ class Nodes(object):
         return class_._instance
 
     def getCoordinator(class_) -> int:
-        if(class_._coordinator == -1):
-            raise Exception('Leader is not initialized', f'Value set to default: {class_._coordinator}')
-
         return class_._coordinator
 
     def setCoordinator(class_, coordinator: int):
         print(f'Node: {class_.getSelfId()}: coordinator changed from Node ID: {class_.getCoordinator()} to Node ID: {coordinator}')
         class_._coordinator = coordinator
-        class_._mutex.release()
 
     def generateFriendsNodesList(class_, me, totalNodes) -> None:
         if(me == None):
@@ -43,6 +39,7 @@ class Nodes(object):
             node = node + 1
             if(node == me):
                 continue
+            print(f'My nodeId: {me} - Added nodeId to nodelist: {node}')
             class_._nodesList.append(node)
 
     def getFriendsNodesList(class_) -> array:
@@ -55,8 +52,6 @@ class Nodes(object):
         return higher
 
     def getSelfId(class_) -> int:
-        if __debug__:
-            return 1
         self_id = os.getenv('NODE_ID')
         return int(self_id)
 

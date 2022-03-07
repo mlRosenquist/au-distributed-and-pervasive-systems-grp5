@@ -11,13 +11,21 @@ nodes = Nodes()
 def greet():
     return make_response({'message': 'Hello World!'})
 
+@app.route('/election',  methods=['GET'])
+def election():
+    httpClient().election()
+
 @app.route('/startElection',  methods=['GET'])
 def startElectionCommand():
+    Nodes().amountMessages = Nodes().amountMessages + 1
     if not Nodes()._down:
-        Nodes().raiseElectionFlag()
-        senderId = request.json['sender_j']
-        if Nodes().getSelfId() > senderId:
-            return make_response("200", 200)
+        if not Nodes().isElecting():
+            Nodes().raiseElectionFlag()
+            senderId = request.json['sender_j']
+            if Nodes().getSelfId() > senderId:
+                return make_response("200", 200)
+            else:
+                return make_response("500", 500)
         else:
             return make_response("500", 500)
     else:
@@ -25,6 +33,7 @@ def startElectionCommand():
 
 @app.route('/newCoordinator', methods=['POST'])
 def updateCoordinator():
+    Nodes().amountMessages = Nodes().amountMessages + 1
     if Nodes()._down:
         return make_response("500", 500)
     else:
@@ -38,6 +47,7 @@ def updateCoordinator():
 
 @app.route('/takeover', methods=['POST'])
 def takeover():
+    Nodes().amountMessages = Nodes().amountMessages + 1
     if not Nodes()._down:
         httpClient().checkHigherOrBecomeCoordinator()
         return make_response("200", 200)
