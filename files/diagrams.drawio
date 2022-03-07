@@ -4,6 +4,9 @@
             <root>
                 <mxCell id="54_8NOIj8Grn_kKXtI9w-0"/>
                 <mxCell id="54_8NOIj8Grn_kKXtI9w-1" parent="54_8NOIj8Grn_kKXtI9w-0"/>
+                <mxCell id="w2AGssiLiUdJvfOAzmTb-0" value="Minikube" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fontSize=28;fontColor=#9999FF;strokeColor=#9999FF;fillColor=none;align=left;horizontal=1;verticalAlign=top;" vertex="1" parent="54_8NOIj8Grn_kKXtI9w-1">
+                    <mxGeometry x="100" y="100" width="530" height="310" as="geometry"/>
+                </mxCell>
                 <mxCell id="wMYIdSO50iKsA_OW4PoB-0" value="&lt;b&gt;Node 2&lt;/b&gt;&lt;br&gt;service: node2-svc" style="rounded=1;whiteSpace=wrap;html=1;" parent="54_8NOIj8Grn_kKXtI9w-1" vertex="1">
                     <mxGeometry x="220" y="120" width="120" height="80" as="geometry"/>
                 </mxCell>
@@ -77,7 +80,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="ZVVcoNiWdb-AS37DR1mb" name="sd-bully-algorithm">
-        <mxGraphModel dx="1465" dy="633" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1265" dy="633" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="tVD1N4Qqr4z1z97VaCkm-0"/>
                 <mxCell id="tVD1N4Qqr4z1z97VaCkm-1" parent="tVD1N4Qqr4z1z97VaCkm-0"/>
