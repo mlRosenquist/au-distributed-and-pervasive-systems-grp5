@@ -55,7 +55,7 @@ class Nodes(object):
         self_id = os.getenv('NODE_ID')
         return int(self_id)
 
-    def raiseElectionFlagclass_(class_):
+    def raiseElectionFlag(class_):
         class_._electionFlag = True
 
     def lowerElectionFlag(class_):

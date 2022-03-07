@@ -2,7 +2,7 @@ from http import client
 from flask import request
 from numpy import array
 import requests
-import Nodes
+from Domain.Nodes import *
 
 class httpClient:
 
@@ -10,42 +10,40 @@ class httpClient:
         pass
 
     # Immediate procedures
-    def startElection(self, target_i: int) -> bool:
-        targetEndpoint = self._getEndpoint(target_i)
+    async def startElection(self, target_i: int) -> bool:
+        targetEndpoint = self.getEndpoint(target_i)
         sender_j = Nodes().getSelfId()
 
         data = {}
         data['sender_j'] = sender_j
-        r = requests.get(targetEndpoint, json=data, timeout=10)
+        r = requests.get(f'{targetEndpoint}/startElection', json=data, timeout=10)
         
-        if(r.status_code != 200):
-            return False
-
-        return True
+        return r.status_code
 
     # Immediate procedures
-    def newCoordinator(self, target_i) -> None:
-        targetEndpoint = self._getEndpoint(target_i)
+    def newCoordinator(self, target_i: int) -> None:
+        targetEndpoint = self.getEndpoint(target_i)
         sender_j = Nodes().getSelfId()
         
         data = {}
         data['sender_j'] = sender_j
-        r = requests.post(targetEndpoint, json=data, timeout=10)
+        r = requests.post(f'{targetEndpoint}/newCoordinator', json=data, timeout=10)
 
         return r.status_code
 
     def takeover(self, target_i: int):
-        targetEndpoint = self._getEndpoint(target_i)
-        r = requests.post(targetEndpoint, timeout=10)
+        targetEndpoint = self.getEndpoint(target_i)
+        r = requests.post(f'{targetEndpoint}/takeover', timeout=10)
 
-    def election(self):
+    async def election(self):
+        Nodes().raiseElectionFlag()
         # Get nodes with higher ids for election process
         allNodes = Nodes().getFriendsNodesList()
         potentialLeaders = []
 
         # Check if any higher node ids are alive
         for nodeId in allNodes:
-            electionStatusCode = self.startElection(nodeId)
+            electionStatusCode = await self.startElection(nodeId)
             if electionStatusCode == 200:
                 potentialLeaders.append(nodeId)
 
@@ -54,11 +52,9 @@ class httpClient:
             self.takeover(highestPriorityNode)
         else:
             Nodes()._coordinator = Nodes().getSelfId()
-            for nodeId in Nodes().getHigherPriorityNodesThanSelf():
-                response_statusCode = self.newCoordinator(nodeId)
-                if(response_statusCode == 500):
-                    self.election()
-                    return
+            for nodeId in Nodes().generateFriendsNodesList():
+                self.newCoordinator(nodeId)
+            Nodes().lowerElectionFlag()
 
     def checkHigherOrBecomeCoordinator(self):
         potentialLeaders = []
@@ -72,10 +68,10 @@ class httpClient:
             highestPriorityNode = max(potentialLeaders)
             self.takeover(highestPriorityNode)
         else:
-            for nodeId in Nodes().generateFriendsNodesList():
+            for nodeId in Nodes().getFriendsNodesList():
                 self.newCoordinator(nodeId)
 
-    def _getEndpoint(target_id) -> str:
+    def getEndpoint(self, target_id: int) -> str:
         return f'http://node{target_id}-svc:5000'
 
         

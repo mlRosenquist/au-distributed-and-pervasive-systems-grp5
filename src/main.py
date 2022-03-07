@@ -12,8 +12,9 @@ def greet():
     return make_response({'message': 'Hello World!'})
 
 @app.route('/election',  methods=['GET'])
-def election():
-    httpClient().election()
+async def election():
+    await httpClient().election()
+    return make_response("200", 200)
 
 @app.route('/startElection',  methods=['GET'])
 def startElectionCommand():
@@ -54,15 +55,45 @@ def takeover():
     else:
         return make_response("500", 500)
 
+import requests
+@app.route('/getAmountMessages', methods=['GET'])
+def getAmountMessages():
+    if(Nodes().getSelfId() == 1):
+        nodes = Nodes().getFriendsNodesList()
+        messagesDict = dict()
+        messagesDict[1] = Nodes().amountMessages
+        for node in nodes:
+            endpoint = httpClient().getEndpoint(node)
+            r = requests.get(f'{endpoint}/getAmountMessages', timeout=10)
+            messagesDict[node] = int(r.text)
+
+        return make_response(messagesDict, 200)
+    else:
+        return make_response(str(Nodes().amountMessages), 200)
+
 def setupNode():
     #Setup scheduled jobs
-    setupEvents()
+    me = Nodes().getSelfId()
+    totalNodes = os.getenv('NO_NODES')
+    Nodes().generateFriendsNodesList(me, int(totalNodes))
+    
+    countingMessages = True
+    #if(not countingMessages):
+        #setupEvents()
+        
 
 if __name__ == "__main__":
+    import os
     # Start the Flask app (must be after the endpoint functions)
-    #app.run(debug=True, host="0.0.0.0", port=5000)
+    print(f'There is in total {os.environ.get("NO_NODES")} nodes', flush=True)
+    
     setupNode()
+
+    me = Nodes().getSelfId()
+
     app.run(host="0.0.0.0", port=5000)
+
+
 
 
 
