@@ -1,0 +1,73 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Aarhus-University\\Repositories\\au-distributed-and-pervasive-systems-grp5\\project2\\src\\PillSupervisor\\Phidget.SensorHandling\\Phidget.SensorHandling.csproj": {}
+  },
+  "projects": {
+    "C:\\Aarhus-University\\Repositories\\au-distributed-and-pervasive-systems-grp5\\project2\\src\\PillSupervisor\\Phidget.SensorHandling\\Phidget.SensorHandling.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Aarhus-University\\Repositories\\au-distributed-and-pervasive-systems-grp5\\project2\\src\\PillSupervisor\\Phidget.SensorHandling\\Phidget.SensorHandling.csproj",
+        "projectName": "Phidget.SensorHandling",
+        "projectPath": "C:\\Aarhus-University\\Repositories\\au-distributed-and-pervasive-systems-grp5\\project2\\src\\PillSupervisor\\Phidget.SensorHandling\\Phidget.SensorHandling.csproj",
+        "packagesPath": "C:\\Users\\tnb\\.nuget\\packages\\",
+        "outputPath": "C:\\Aarhus-University\\Repositories\\au-distributed-and-pervasive-systems-grp5\\project2\\src\\PillSupervisor\\Phidget.SensorHandling\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\tnb\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/Novicell-Dynamicweb/Novicell.Shopify.ProductConnector/_packaging/Product-connector-templates/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Phidget22.NET": {
+              "target": "Package",
+              "version": "[1.10.20220211, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

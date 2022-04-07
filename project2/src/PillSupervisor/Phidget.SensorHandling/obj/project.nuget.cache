@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "hQBllbsfb8/K3SrrdeKvd872S0vGH6RPulzU9kBYZMhDPJwO9uempe+DcN9g8gD6DAe2xXGoptplSwFsNa1+Gg==",
+  "success": true,
+  "projectFilePath": "C:\\Aarhus-University\\Repositories\\au-distributed-and-pervasive-systems-grp5\\project2\\src\\PillSupervisor\\Phidget.SensorHandling\\Phidget.SensorHandling.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\tnb\\.nuget\\packages\\phidget22.net\\1.10.20220211\\phidget22.net.1.10.20220211.nupkg.sha512"
+  ],
+  "logs": []
+}
