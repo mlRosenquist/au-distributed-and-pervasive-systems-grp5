@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "AOKSp7YI2O4wumuBcA7o3P/MSdTK+bZpY5gxOYkDRZDlzxIJd5vTqwSeJvd6T70kcJX9HJC+veb/hIH3lBrOEQ==",
+  "success": true,
+  "projectFilePath": "/home/mlrosenquist/repos/au-distributed-and-pervasive-systems-grp5/project2/src/PillSupervisor/PillSupervisor.Sensors.PlayGround/PillSupervisor.Sensors.PlayGround.csproj",
+  "expectedPackageFiles": [
+    "/home/mlrosenquist/.nuget/packages/mqttnet/4.0.0-preview5/mqttnet.4.0.0-preview5.nupkg.sha512",
+    "/home/mlrosenquist/.nuget/packages/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

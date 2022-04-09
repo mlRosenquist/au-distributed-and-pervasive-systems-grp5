@@ -66,33 +66,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\tnb\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/home/mlrosenquist/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Aarhus-University\\Repositories\\au-distributed-and-pervasive-systems-grp5\\project2\\src\\PillSupervisor\\Phidget.SensorHandling\\Phidget.SensorHandling.csproj",
+      "projectUniqueName": "/home/mlrosenquist/repos/au-distributed-and-pervasive-systems-grp5/project2/src/PillSupervisor/Phidget.SensorHandling/Phidget.SensorHandling.csproj",
       "projectName": "Phidget.SensorHandling",
-      "projectPath": "C:\\Aarhus-University\\Repositories\\au-distributed-and-pervasive-systems-grp5\\project2\\src\\PillSupervisor\\Phidget.SensorHandling\\Phidget.SensorHandling.csproj",
-      "packagesPath": "C:\\Users\\tnb\\.nuget\\packages\\",
-      "outputPath": "C:\\Aarhus-University\\Repositories\\au-distributed-and-pervasive-systems-grp5\\project2\\src\\PillSupervisor\\Phidget.SensorHandling\\obj\\",
+      "projectPath": "/home/mlrosenquist/repos/au-distributed-and-pervasive-systems-grp5/project2/src/PillSupervisor/Phidget.SensorHandling/Phidget.SensorHandling.csproj",
+      "packagesPath": "/home/mlrosenquist/.nuget/packages/",
+      "outputPath": "/home/mlrosenquist/repos/au-distributed-and-pervasive-systems-grp5/project2/src/PillSupervisor/Phidget.SensorHandling/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\tnb\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/home/mlrosenquist/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://pkgs.dev.azure.com/Novicell-Dynamicweb/Novicell.Shopify.ProductConnector/_packaging/Product-connector-templates/nuget/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {
@@ -130,7 +122,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/6.0.103/RuntimeIdentifierGraph.json"
       }
     }
   }

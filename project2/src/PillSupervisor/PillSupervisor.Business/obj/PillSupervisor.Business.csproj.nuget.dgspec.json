@@ -1,0 +1,70 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/mlrosenquist/repos/au-distributed-and-pervasive-systems-grp5/project2/src/PillSupervisor/PillSupervisor.Business/PillSupervisor.Business.csproj": {}
+  },
+  "projects": {
+    "/home/mlrosenquist/repos/au-distributed-and-pervasive-systems-grp5/project2/src/PillSupervisor/PillSupervisor.Business/PillSupervisor.Business.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/mlrosenquist/repos/au-distributed-and-pervasive-systems-grp5/project2/src/PillSupervisor/PillSupervisor.Business/PillSupervisor.Business.csproj",
+        "projectName": "PillSupervisor.Business",
+        "projectPath": "/home/mlrosenquist/repos/au-distributed-and-pervasive-systems-grp5/project2/src/PillSupervisor/PillSupervisor.Business/PillSupervisor.Business.csproj",
+        "packagesPath": "/home/mlrosenquist/.nuget/packages/",
+        "outputPath": "/home/mlrosenquist/repos/au-distributed-and-pervasive-systems-grp5/project2/src/PillSupervisor/PillSupervisor.Business/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/mlrosenquist/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "MQTTnet": {
+              "target": "Package",
+              "version": "[4.0.0-preview5, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/6.0.103/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
