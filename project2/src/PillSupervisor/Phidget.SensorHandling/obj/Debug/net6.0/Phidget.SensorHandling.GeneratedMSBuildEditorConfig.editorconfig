@@ -7,4 +7,4 @@ build_property.InvariantGlobalization =
 build_property.PlatformNeutralAssembly = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Phidget.SensorHandling
-build_property.ProjectDir = /home/mlrosenquist/repos/au-distributed-and-pervasive-systems-grp5/project2/src/PillSupervisor/Phidget.SensorHandling/
+build_property.ProjectDir = C:\Dev\au-distributed-and-pervasive-systems-grp5\project2\src\PillSupervisor\Phidget.SensorHandling\
