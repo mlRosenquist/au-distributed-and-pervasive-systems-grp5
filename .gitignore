@@ -3,3 +3,6 @@ project1/.idea/misc.xml
 project1/.idea/modules.xml
 project1/.idea/vcs.xml
 project1/.idea/inspectionProfiles/profiles_settings.xml
+bin
+obj
+.vs
