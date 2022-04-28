@@ -14,47 +14,46 @@ namespace Phidget.SensorHandling
         private async static void VoltageInput_VoltageChangeLongRange(object sender, Phidget22.Events.VoltageInputVoltageChangeEventArgs e)
 		{
 			Phidget22.VoltageInput evChannel = (Phidget22.VoltageInput)sender;
+            Console.WriteLine(e.Voltage);
 			// Long range goes fast from 5 to 0
-			var active = e.Voltage < 1;
-			if (!active)
-				return;
-
-			Console.WriteLine($"Long range is active!");
+			var open = e.Voltage > 3;
+			var state = open == true ? "Open" : "Closed";
+            Console.WriteLine($"The door is: {state}");
 
 			var payload = new ProximitySensorEvent()
 			{
 				DeviceId = "101",
-				DeviceDescription = "Long range device",
-				Payload = "Fired!"
+				DeviceDescription = "Long range proximity device",
+				Status = state,
+				Date = DateTime.UtcNow.AddHours(2)
 			};
 
 			var payloadJson = JsonConvert.SerializeObject(payload);
 
-			await Client.PublishStringAsync("LongRangeSensor", payload: payloadJson);
-
-
+			await Client.PublishStringAsync("Proximitysensor/LongRangeSensor", payload: payloadJson);
 		}
 
 		private async static void VoltageInput_VoltageChangeCloseRange(object sender, Phidget22.Events.VoltageInputVoltageChangeEventArgs e)
 		{
 			Phidget22.VoltageInput evChannel = (Phidget22.VoltageInput)sender;
 			// Close range goes unstable from 5 to 0.5, so bigger step for stability
-			var active = e.Voltage < 2;
-			if (!active)
-				return;
+			var open = e.Voltage > 3;
+			var state = open == true ? "Open" : "Closed";
+			Console.WriteLine($"The pill door is: {state}");
 
-			Console.WriteLine($"Close is active!");
+			Console.WriteLine($"Close range proximitysensor is active!");
 
 			var payload = new ProximitySensorEvent()
 			{
 				DeviceId = "102",
-				DeviceDescription = "Short range device",
-				Payload = "Fired!"
+				DeviceDescription = "Short range proximity device",
+				Status = state,
+				Date = DateTime.UtcNow.AddHours(2)
 			};
 
 			var payloadJson = JsonConvert.SerializeObject(payload);
 
-			await Client.PublishStringAsync("ShortRangeSensor", payload: payloadJson);
+			await Client.PublishStringAsync("Proximitysensor/ShortRangeSensor", payload: payloadJson);
 		}
 
 		static async Task Main(string[] args)
@@ -81,7 +80,7 @@ namespace Phidget.SensorHandling
 			voltageInputCloseRange.VoltageChange += VoltageInput_VoltageChangeCloseRange;
 
 			voltageInputLongRange.Open(5000);
-			voltageInputLongRange.VoltageChangeTrigger = 1;
+			voltageInputLongRange.VoltageChangeTrigger = 4;
 			voltageInputCloseRange.Open(5000);
 			voltageInputCloseRange.VoltageChangeTrigger = 3;
 
@@ -93,10 +92,11 @@ namespace Phidget.SensorHandling
 		}
 	}
 
-    internal class ProximitySensorEvent
+    public class ProximitySensorEvent
 	{
         public string? DeviceId { get; set; }
         public string? DeviceDescription { get; set; }
-        public string? Payload { get; set; }
+        public string? Status { get; set; }
+        public DateTime? Date { get; set; }
     }
 }
