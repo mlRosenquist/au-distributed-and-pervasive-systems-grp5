@@ -22,23 +22,24 @@ public static class Program
     // What about when will pill taken be reset?
 
     private static MqttClient? Client { get; set; }
-    private const string RootTopic = "localhost/";
-    private const string LongRangeSensor = "LongRangeSensor";
-    private const string ShortRangeSensor = "ShortRangeSensor";
+    private const string LongRangeTopic = "Proximitysensor/LongRangeSensor";
+    private const string ShortRangeTopic = "Proximitysensor/ShortRangeSensor";
     private const string IkeaMotionSensor = "0x680ae2fffef9a940";
-    private const string LightStripActuator = "0x84fd27fffec8a7fd";
+    private const string WarningLightActuator = "0x84fd27fffec8a7fd";
     private static List<string> Sensors = new()
     {
-        LongRangeSensor,
-        ShortRangeSensor,
+        LongRangeTopic,
+        ShortRangeTopic,
         IkeaMotionSensor,
-        LightStripActuator
+        WarningLightActuator
     };
+    private const string ContextTopic = "Context";
 
     private static bool FridgeClosed = true;
     private static bool PillTaken = false;
     private static DateTime? LastMotionDetected; // not used yet
     private static DateTime? LastPillTaken;
+    private static bool SendWarning = false;
     // Not sure we need to keep state of light. Just send out message to turn it on or off.
 
     public static async Task Main(string[] args)
@@ -47,7 +48,8 @@ public static class Program
         Client = mqttFactory.CreateMqttClient();
 
         var mqttClientOptions = new MqttClientOptionsBuilder()
-            .WithTcpServer("localhost")//.WithTcpServer("86.52.53.126")
+            .WithTcpServer("localhost")
+            //.WithTcpServer("86.52.53.126")
             .Build();
 
         await Client.ConnectAsync(mqttClientOptions, CancellationToken.None);
@@ -59,7 +61,7 @@ public static class Program
                 break;
 
             var mqttSubscribeOptions = mqttFactory.CreateSubscribeOptionsBuilder()
-                       .WithTopicFilter(f => { f.WithTopic($"{RootTopic + sensor}"); })
+                       .WithTopicFilter(f => { f.WithTopic($"{sensor}"); })
                        .Build();
 
             await Client.SubscribeAsync(mqttSubscribeOptions, CancellationToken.None);
@@ -78,37 +80,41 @@ public static class Program
     {
         switch (applicationMessage.Topic)
         {
-            case RootTopic + LongRangeSensor:
-                FridgeClosed = !FridgeClosed;
-                Console.WriteLine($"Fridge Closed: {FridgeClosed}");
+            case LongRangeTopic:
+                var payloadString = System.Text.Encoding.UTF8.GetString(applicationMessage.Payload);
+                var proximitySensorEvent = JsonConvert.DeserializeObject<ProximitySensorEvent>(payloadString);
+                FridgeClosed = !proximitySensorEvent.State.Contains("Open");
                 CheckFridgeSafeToEat();
                 break;
-            case RootTopic + ShortRangeSensor:
+            case ShortRangeTopic:
                 if (!PillTaken)
                 {
                     LastPillTaken = DateTime.Now;
                     PillTaken = true;
                 }
-                Console.WriteLine($"Pill Taken: {PillTaken}");
                 break;
-            case RootTopic + IkeaMotionSensor:
+            case IkeaMotionSensor:
                 LastMotionDetected = DateTime.Now;
-                Console.WriteLine($"Motion Detected: {LastMotionDetected}");
                 MotionSensorSequence();
                 break;
             default:
                 throw new ArgumentException("Unknown Topic");
         }
+        Console.WriteLine($"Fridge Closed: {FridgeClosed}");
+        Console.WriteLine($"Pill Taken: {PillTaken}");
+        Console.WriteLine($"Motion Detected: {LastMotionDetected}");
+        Console.WriteLine("\n");
 
         // Message debugging
+        /*
         Console.WriteLine("inside listen event");
         Console.WriteLine(applicationMessage.Topic);
         var payload = System.Text.Encoding.UTF8.GetString(applicationMessage.Payload);
         var data = JsonConvert.DeserializeObject<ProximitySensorEvent>(payload);
         Console.WriteLine(data.DeviceId);
         Console.WriteLine(data.DeviceDescription);
-        Console.WriteLine(data.Payload);
-
+        Console.WriteLine(data.State);
+        */
 
 
         return Task.CompletedTask;
@@ -116,45 +122,37 @@ public static class Program
 
     internal static void CheckFridgeSafeToEat()
     {
-        if (!PillTaken && !FridgeClosed)
+        //if (!PillTaken && !FridgeClosed) // in here logic for if pill taken less than one hour ago, then alarm on
+        if ((!FridgeClosed && !PillTaken) || (!FridgeClosed && PillTakenWithinHour()))
         {
             // send warning light
-            TurnOnLightStrip();
-        } else
-        {
-            TurnOffLightStrip();
-        }
+            // TurnOnLightStrip(); // change to context centric alarm on, instead of device centric turn lightstrip on.
+            SendMedicineWarningStatus(true);
+        } else {
+            SendMedicineWarningStatus(false);
+        } 
 
     }
 
-    public static void TurnOnLightStrip()
+    private static bool PillTakenWithinHour()
     {
+        return (DateTime.Now - LastPillTaken.Value) <= TimeSpan.FromSeconds(30);//.FromHours(1);
+    }
+
+    public static void SendMedicineWarningStatus(bool sendWarning)
+    {
+        var warningState = sendWarning ? "ON" : "OFF"; 
+
         var applicationMessage = new MqttApplicationMessageBuilder()
-            .WithTopic($"{RootTopic + LightStripActuator}/set")
+            .WithTopic($"{ContextTopic}/Warning")
             .WithPayload("{" +
-                         "\"state\": \"ON\", \n" +
-                         $"\"brightness\": \"200\", \n" +
-                         $"\"color\": {{\"hex\": \"#EE401A\"}} \n" +
+                         $"\"state\": \"{warningState}\", \n" +
                          "}")
             .Build();
 
         Client.PublishAsync(applicationMessage, CancellationToken.None);
 
-        Console.WriteLine("Fridge Warning Light ON");
-    }
-
-
-    public static void TurnOffLightStrip()
-    {
-        var applicationMessage = new MqttApplicationMessageBuilder()
-            .WithTopic($"{RootTopic + LightStripActuator}/set")
-            .WithPayload("{\"state\": \"OFF\"}")
-            .Build();
-
-        Client.PublishAsync(applicationMessage, CancellationToken.None);
-
-
-        Console.WriteLine("Fridge Warning Light OFF");
+        Console.WriteLine($"Fridge Warning Light {warningState}");
     }
 
     internal static void MotionSensorSequence()
@@ -172,6 +170,6 @@ public static class Program
     {
         public string? DeviceId { get; set; }
         public string? DeviceDescription { get; set; }
-        public string? Payload { get; set; }
+        public string? State { get; set; }
     }
 }
