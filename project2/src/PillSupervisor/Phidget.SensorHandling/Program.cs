@@ -16,7 +16,8 @@ namespace Phidget.SensorHandling
 			Phidget22.VoltageInput evChannel = (Phidget22.VoltageInput)sender;
             Console.WriteLine(e.Voltage);
 			// Long range goes fast from 5 to 0
-			var open = e.Voltage > 3;
+
+			var open = e.Voltage > 4;
 			var state = open == true ? "Open" : "Closed";
             Console.WriteLine($"The door is: {state}");
 
@@ -37,11 +38,10 @@ namespace Phidget.SensorHandling
 		{
 			Phidget22.VoltageInput evChannel = (Phidget22.VoltageInput)sender;
 			// Close range goes unstable from 5 to 0.5, so bigger step for stability
+
 			var open = e.Voltage > 3;
 			var state = open == true ? "Open" : "Closed";
 			Console.WriteLine($"The pill door is: {state}");
-
-			Console.WriteLine($"Close range proximitysensor is active!");
 
 			var payload = new ProximitySensorEvent()
 			{
