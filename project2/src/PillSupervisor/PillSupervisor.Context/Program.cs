@@ -24,8 +24,8 @@ public static class Program
     private static MqttClient? Client { get; set; }
     private const string LongRangeTopic = "Proximitysensor/LongRangeSensor";
     private const string ShortRangeTopic = "Proximitysensor/ShortRangeSensor";
-    private const string IkeaMotionSensor = "0x680ae2fffef9a940";
-    private const string WarningLightActuator = "0x84fd27fffec8a7fd";
+    private const string IkeaMotionSensor = "zigbee2mqtt/0x680ae2fffef9a940";
+    private const string WarningLightActuator = "zigbee2mqtt/0x84fd27fffec8a7fd";
     private static List<string> Sensors = new()
     {
         LongRangeTopic,
