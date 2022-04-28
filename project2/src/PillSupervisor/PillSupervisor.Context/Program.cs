@@ -5,7 +5,7 @@ using System;
 using PillSupervisor.Business;
 // Context model proposal from Alexander
 // It's a state machine *MIND BLOWN* emoji
-public static class Program 
+public static class Program
 {
     // ZigBee messages are sent with MQTT messages as specified in Business
     // Phidget messages are with MQTT messages as specified in SensorHandling
@@ -35,11 +35,10 @@ public static class Program
     };
     private const string ContextTopic = "Context";
 
-    private static bool FridgeClosed = true;
+    private static bool FridgeOpen = true;
     private static bool PillTaken = false;
     private static DateTime? LastMotionDetected; // not used yet
     private static DateTime? LastPillTaken = DateTime.Now - TimeSpan.FromDays(1);
-    private static bool SendWarning = false;
     // Not sure we need to keep state of light. Just send out message to turn it on or off.
 
     public static async Task Main(string[] args)
@@ -57,7 +56,7 @@ public static class Program
         foreach (var sensor in Sensors)
         {
             // I guess we don't need to subscribe to lightstrip
-            if (sensor == "0x84fd27fffec8a7fd") 
+            if (sensor == "0x84fd27fffec8a7fd")
                 break;
 
             var mqttSubscribeOptions = mqttFactory.CreateSubscribeOptionsBuilder()
@@ -67,7 +66,7 @@ public static class Program
             await Client.SubscribeAsync(mqttSubscribeOptions, CancellationToken.None);
         }
 
-       
+
 
         // listen on sensor event
         Console.WriteLine("before listen event");
@@ -78,14 +77,15 @@ public static class Program
 
     public static Task ContextUpdate(MqttApplicationMessage applicationMessage)
     {
+
+        var payloadString = System.Text.Encoding.UTF8.GetString(applicationMessage.Payload);
         switch (applicationMessage.Topic)
         {
             case LongRangeTopic:
-                var payloadString = System.Text.Encoding.UTF8.GetString(applicationMessage.Payload);
                 var proximitySensorEvent = JsonConvert.DeserializeObject<ProximitySensorEvent>(payloadString);
                 if (proximitySensorEvent != null && proximitySensorEvent.Status != null)
                 {
-                    FridgeClosed = !proximitySensorEvent.Status.Contains("Open");
+                    FridgeOpen = proximitySensorEvent.Status.Contains("Open");
                 }
 
                 CheckFridgeSafeToEat();
@@ -98,8 +98,12 @@ public static class Program
                 }
                 break;
             case IkeaMotionSensor:
-                LastMotionDetected = DateTime.Now;
-                MotionSensorSequence();
+                var ikeaMotionEvent = JsonConvert.DeserializeObject<IkeaMotionEvent>(payloadString);
+                if (ikeaMotionEvent.occupancy.Value)
+                {
+                    LastMotionDetected = DateTime.Now;
+                    MotionSensorSequence();
+                }
                 break;
             case WarningLightActuator:
                 Console.WriteLine("Reply from lightstrip?");
@@ -107,37 +111,27 @@ public static class Program
             default:
                 throw new ArgumentException("Unknown Topic");
         }
-        Console.WriteLine($"Fridge Closed: {FridgeClosed}");
+        Console.WriteLine($"Fridge Open: {FridgeOpen}");
         Console.WriteLine($"Pill Taken: {PillTaken}");
         Console.WriteLine($"Motion Detected: {LastMotionDetected}");
+        Console.WriteLine($"Last Pill Taken: {LastPillTaken}");
+        Console.WriteLine($"Time since pill taken: {(DateTime.Now - LastPillTaken).Value.Seconds}");
         Console.WriteLine("\n");
-
-        // Message debugging
-        /*
-        Console.WriteLine("inside listen event");
-        Console.WriteLine(applicationMessage.Topic);
-        var payload = System.Text.Encoding.UTF8.GetString(applicationMessage.Payload);
-        var data = JsonConvert.DeserializeObject<ProximitySensorEvent>(payload);
-        Console.WriteLine(data.DeviceId);
-        Console.WriteLine(data.DeviceDescription);
-        Console.WriteLine(data.State);
-        */
-
 
         return Task.CompletedTask;
     }
 
     internal static void CheckFridgeSafeToEat()
     {
-        //if (!PillTaken && !FridgeClosed) // in here logic for if pill taken less than one hour ago, then alarm on
-        if ((!FridgeClosed && !PillTaken) || (!FridgeClosed && PillTakenWithinHour()))
+        if ((FridgeOpen && !PillTaken) || (FridgeOpen && PillTakenWithinHour()))
         {
             // send warning light
-            // TurnOnLightStrip(); // change to context centric alarm on, instead of device centric turn lightstrip on.
             SendMedicineWarningStatus(true);
-        } else {
+        }
+        else
+        {
             SendMedicineWarningStatus(false);
-        } 
+        }
 
     }
 
@@ -163,24 +157,11 @@ public static class Program
         if (!sendWarning)
         {
             lightStripSetPayload.color.hex = "#1AEE2E";
-        } 
+        }
 
         var payloadJson = JsonConvert.SerializeObject(lightStripSetPayload);
 
-
-        /*var applicationMessage = new MqttApplicationMessageBuilder()
-            .WithTopic($"{WarningLightActuator}/set")
-            .WithPayload("{" +
-                         $"\"state\": \"{warningState}\", \n" +
-                         $"\"state\": \"{warningState}\", \n" +
-                         $"\"state\": \"{warningState}\", \n" +
-                         "}")
-            .Build();*/
-
-
         await Client.PublishStringAsync($"{WarningLightActuator}/set", payload: payloadJson);
-
-        //Client.PublishAsync(applicationMessage, CancellationToken.None);
 
         Console.WriteLine($"Fridge Warning Light {sendWarning}");
     }
@@ -190,12 +171,15 @@ public static class Program
         Console.WriteLine("Commencing wake up sequence");
         // Maybe waking up. Check if last taken pill was not today. Maybe patient need to sleep, so we track that with
         // motion sensor, before patient should take medicine again.
-        if (LastPillTaken.Value.Date != DateTime.Today)
+
+        //if (LastPillTaken.Value.Date != DateTime.Today)
+
+        if ((DateTime.Now - LastPillTaken.Value) >= TimeSpan.FromSeconds(90)) ; // Demonstration value
         {
             PillTaken = false;
         }
     }
-    
+
     internal class LightStripSetColor
     {
         public string? hex { get; set; }
@@ -214,5 +198,10 @@ public static class Program
         public string? DeviceId { get; set; }
         public string? DeviceDescription { get; set; }
         public string? Status { get; set; }
+    }
+
+    internal class IkeaMotionEvent
+    {
+        public bool? occupancy { get; set; }
     }
 }
