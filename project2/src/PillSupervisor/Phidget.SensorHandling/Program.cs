@@ -25,14 +25,13 @@ namespace Phidget.SensorHandling
 			{
 				DeviceId = "101",
 				DeviceDescription = "Long range device",
-				Payload = "Fired!"
+				Payload = "Fired!",
+				Date = DateTime.UtcNow
 			};
 
 			var payloadJson = JsonConvert.SerializeObject(payload);
 
 			await Client.PublishStringAsync("LongRangeSensor", payload: payloadJson);
-
-
 		}
 
 		private async static void VoltageInput_VoltageChangeCloseRange(object sender, Phidget22.Events.VoltageInputVoltageChangeEventArgs e)
@@ -49,7 +48,8 @@ namespace Phidget.SensorHandling
 			{
 				DeviceId = "102",
 				DeviceDescription = "Short range device",
-				Payload = "Fired!"
+				Payload = "Fired!",
+				Date = DateTime.UtcNow
 			};
 
 			var payloadJson = JsonConvert.SerializeObject(payload);
@@ -93,10 +93,11 @@ namespace Phidget.SensorHandling
 		}
 	}
 
-    internal class ProximitySensorEvent
+    public class ProximitySensorEvent
 	{
         public string? DeviceId { get; set; }
         public string? DeviceDescription { get; set; }
         public string? Payload { get; set; }
+        public DateTime? Date { get; set; }
     }
 }
