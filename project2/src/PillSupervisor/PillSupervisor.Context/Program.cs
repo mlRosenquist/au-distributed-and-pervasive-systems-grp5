@@ -38,7 +38,7 @@ public static class Program
     private static bool FridgeClosed = true;
     private static bool PillTaken = false;
     private static DateTime? LastMotionDetected; // not used yet
-    private static DateTime? LastPillTaken;
+    private static DateTime? LastPillTaken = DateTime.Now - TimeSpan.FromDays(1);
     private static bool SendWarning = false;
     // Not sure we need to keep state of light. Just send out message to turn it on or off.
 
@@ -48,8 +48,8 @@ public static class Program
         Client = mqttFactory.CreateMqttClient();
 
         var mqttClientOptions = new MqttClientOptionsBuilder()
-            .WithTcpServer("localhost")
-            //.WithTcpServer("86.52.53.126")
+            //.WithTcpServer("localhost")
+            .WithTcpServer("86.52.53.126")
             .Build();
 
         await Client.ConnectAsync(mqttClientOptions, CancellationToken.None);
@@ -83,7 +83,11 @@ public static class Program
             case LongRangeTopic:
                 var payloadString = System.Text.Encoding.UTF8.GetString(applicationMessage.Payload);
                 var proximitySensorEvent = JsonConvert.DeserializeObject<ProximitySensorEvent>(payloadString);
-                FridgeClosed = !proximitySensorEvent.State.Contains("Open");
+                if (proximitySensorEvent != null && proximitySensorEvent.Status != null)
+                {
+                    FridgeClosed = !proximitySensorEvent.Status.Contains("Open");
+                }
+
                 CheckFridgeSafeToEat();
                 break;
             case ShortRangeTopic:
@@ -96,6 +100,9 @@ public static class Program
             case IkeaMotionSensor:
                 LastMotionDetected = DateTime.Now;
                 MotionSensorSequence();
+                break;
+            case WarningLightActuator:
+                Console.WriteLine("Reply from lightstrip?");
                 break;
             default:
                 throw new ArgumentException("Unknown Topic");
@@ -139,20 +146,43 @@ public static class Program
         return (DateTime.Now - LastPillTaken.Value) <= TimeSpan.FromSeconds(30);//.FromHours(1);
     }
 
-    public static void SendMedicineWarningStatus(bool sendWarning)
+    public async static void SendMedicineWarningStatus(bool sendWarning)
     {
-        var warningState = sendWarning ? "ON" : "OFF"; 
+        //var warningState = sendWarning ? "ON" : "OFF";
 
-        var applicationMessage = new MqttApplicationMessageBuilder()
-            .WithTopic($"{ContextTopic}/Warning")
+        var lightStripSetPayload = new LightStripSetEvent()
+        {
+            state = $"ON",
+            brightness = "200",
+            color = new LightStripSetColor()
+            {
+                hex = "#EE401A",
+            },
+        };
+
+        if (!sendWarning)
+        {
+            lightStripSetPayload.color.hex = "#1AEE2E";
+        } 
+
+        var payloadJson = JsonConvert.SerializeObject(lightStripSetPayload);
+
+
+        /*var applicationMessage = new MqttApplicationMessageBuilder()
+            .WithTopic($"{WarningLightActuator}/set")
             .WithPayload("{" +
                          $"\"state\": \"{warningState}\", \n" +
+                         $"\"state\": \"{warningState}\", \n" +
+                         $"\"state\": \"{warningState}\", \n" +
                          "}")
-            .Build();
+            .Build();*/
 
-        Client.PublishAsync(applicationMessage, CancellationToken.None);
 
-        Console.WriteLine($"Fridge Warning Light {warningState}");
+        await Client.PublishStringAsync($"{WarningLightActuator}/set", payload: payloadJson);
+
+        //Client.PublishAsync(applicationMessage, CancellationToken.None);
+
+        Console.WriteLine($"Fridge Warning Light {sendWarning}");
     }
 
     internal static void MotionSensorSequence()
@@ -165,11 +195,24 @@ public static class Program
             PillTaken = false;
         }
     }
+    
+    internal class LightStripSetColor
+    {
+        public string? hex { get; set; }
+    }
+
+    internal class LightStripSetEvent
+    {
+        public string? state { get; set; }
+        public string? brightness { get; set; }
+        public LightStripSetColor? color { get; set; }
+    }
+
 
     internal class ProximitySensorEvent
     {
         public string? DeviceId { get; set; }
         public string? DeviceDescription { get; set; }
-        public string? State { get; set; }
+        public string? Status { get; set; }
     }
 }
